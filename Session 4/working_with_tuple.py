@@ -1,335 +1,203 @@
-# Tuple Basics
-# CREATING TUPLES
+"""
+tuples_comprehensive.py
 
-# Empty tuple
-empty_tuple = ()
-print(f"Empty tuple: {empty_tuple}")
+Comprehensive tuple guide:
+- Creation, indexing, slicing
+- Operations, built-ins, methods
+- Conversions, advanced patterns
+- Common interview problems
+- Extensive conditional examples (including nested)
+- Inline comments explain expressions, operators, and intent
 
-# Single element tuple (NOTE: comma is mandatory!)
-single_tuple = (5,)  # Without comma, it's just int
-not_tuple = (5)      # This is int, not tuple
-print(f"Single element tuple: {single_tuple}")
-print(f"Type of single_tuple: {type(single_tuple)}")
-print(f"Type of not_tuple: {type(not_tuple)}")
+This file is runnable and aims to be safe (no intentional runtime errors).
+"""
 
-# Multiple elements
-numbers = (1, 2, 3, 4, 5)
-mixed = (1, "Hello", 3.14, True, [1, 2])  # Can contain different types
-nested = ((1, 2), (3, 4), (5, 6))        # Nested tuples
+from functools import reduce
+from collections import Counter, namedtuple, defaultdict
+import sys
+import time
+import timeit
+import math
 
-# Using tuple() constructor
-from_list = tuple([1, 2, 3, 4])
-from_string = tuple("Hello")
-from_range = tuple(range(5))
+# ---------------------------
+# 1. TUPLE BASICS - Creation
+# ---------------------------
 
-print(f"From list: {from_list}")
-print(f"From string: {from_string}")
-print(f"From range: {from_range}")
+# Empty tuple literal: parentheses with nothing inside
+empty_tuple = ()  # empty tuple object
 
-# Tuple unpacking
-a, b, c = (1, 2, 3)
-print(f"Unpacked values: a={a}, b={b}, c={c}")
+# Single-element tuple: comma is mandatory because parentheses alone are grouping
+single_tuple = (5,)     # tuple with one element: 5
+not_tuple = (5)         # parentheses only -> integer 5 (grouping expression)
 
-# Extended unpacking with *
-first, *middle, last = (1, 2, 3, 4, 5)
-print(f"First: {first}, Middle: {middle}, Last: {last}")
+# Multiple elements tuple
+numbers = (1, 2, 3, 4, 5)               # tuple of ints
+mixed = (1, "Hello", 3.14, True, None)  # heterogeneous tuple (allowed)
+nested = ((1, 2), (3, 4), (5, 6))       # nested tuples
 
+# tuple() constructor from iterables
+from_list = tuple([1, 2, 3, 4])         # convert list to tuple
+from_string = tuple("Hello")            # tuple of characters: ('H','e','l','l','o')
+from_range = tuple(range(5))            # (0,1,2,3,4)
 
-# Accessing Elements
-# ACCESSING TUPLE ELEMENTS
-# -------------------------
+# Tuple unpacking: left-side variables receive elements from right-side tuple
+a, b, c = (1, 2, 3)                     # a=1, b=2, c=3
+
+# Extended unpacking: * collects remaining elements as list
+first, *middle, last = (1, 2, 3, 4, 5)  # first=1, middle=[2,3,4], last=5
+
+# ---------------------------
+# 2. Accessing elements
+# ---------------------------
 
 my_tuple = (10, 20, 30, 40, 50, 60, 70)
 
-# Indexing (0-based)
-print(f"First element: {my_tuple[0]}")        # 10
-print(f"Last element: {my_tuple[-1]}")        # 70
-print(f"Second last: {my_tuple[-2]}")         # 60
+# Indexing: 0-based
+first_elem = my_tuple[0]    # 10, index 0 -> first element
+last_elem = my_tuple[-1]    # 70, negative index -1 -> last element
+second_last = my_tuple[-2]  # 60, negative index -2 -> second last
 
-# Slicing [start:end:step]
-print(f"First 3 elements: {my_tuple[:3]}")    # (10, 20, 30)
-print(f"Last 3 elements: {my_tuple[-3:]}")    # (50, 60, 70)
-print(f"Elements 2-4: {my_tuple[1:4]}")       # (20, 30, 40)
-print(f"Every 2nd element: {my_tuple[::2]}")  # (10, 30, 50, 70)
-print(f"Reverse tuple: {my_tuple[::-1]}")     # (70, 60, 50, 40, 30, 20, 10)
+# Slicing: [start:end:step], end exclusive
+first_three = my_tuple[:3]       # elements indices 0..2 -> (10,20,30)
+last_three = my_tuple[-3:]       # last 3 elements -> (50,60,70)
+middle_slice = my_tuple[1:4]     # indices 1..3 -> (20,30,40)
+every_second = my_tuple[::2]     # step 2 -> (10,30,50,70)
+reversed_tuple = my_tuple[::-1]  # reversed order
 
-# Accessing nested tuple
-nested = ((1, 2), (3, 4), (5, 6))
-print(f"First nested: {nested[0]}")           # (1, 2)
-print(f"Element at [1][1]: {nested[1][1]}")   # 4
+# Access nested tuple elements
+first_nested = nested[0]         # (1,2)
+nested_item = nested[1][1]       # 4 (second element of second tuple)
 
+# Safe access helper: avoid IndexError by checking length first
+def safe_get(tup, index, default=None):
+    # if index within bounds, return element, else default
+    if -len(tup) <= index < len(tup):
+        return tup[index]
+    return default
 
-# Tuple Operations
-# TUPLE OPERATIONS
-# -----------------
+# ---------------------------
+# 3. Tuple operations (immutable)
+# ---------------------------
 
 t1 = (1, 2, 3)
 t2 = (4, 5, 6)
 t3 = (1, 2, 3)
 
-# Concatenation (+)
-concatenated = t1 + t2
-print(f"Concatenation: {concatenated}")       # (1, 2, 3, 4, 5, 6)
+# Concatenation: + returns new tuple
+concatenated = t1 + t2           # (1,2,3,4,5,6)
 
-# Repetition (*)
-repeated = t1 * 3
-print(f"Repetition: {repeated}")              # (1, 2, 3, 1, 2, 3, 1, 2, 3)
+# Repetition: * repeats the sequence
+repeated = t1 * 3                 # (1,2,3,1,2,3,1,2,3)
 
-# Membership (in, not in)
-print(f"Is 2 in t1? {2 in t1}")               # True
-print(f"Is 5 in t1? {5 in t1}")               # False
-print(f"Is 5 not in t1? {5 not in t1}")       # True
+# Membership: 'in' / 'not in' - O(n) linear search
+has_two = (2 in t1)
+has_five = (5 in t1)
+not_has_five = (5 not in t1)
 
-# Comparison operators
-print(f"t1 == t3: {t1 == t3}")                # True
-print(f"t1 != t2: {t1 != t2}")                # True
-print(f"t1 < t2: {t1 < t2}")                  # True (lexicographic)
+# Comparison: element-wise lexicographic comparisons
+eq_test = (t1 == t3)              # True
+ne_test = (t1 != t2)              # True
+lt_test = (t1 < t2)               # True if t1 lexicographically less than t2
 
-# Identity comparison
-print(f"t1 is t3: {t1 is t3}")                # False (different objects)
+# Identity check (object identity): 'is' rarely used for tuples, use only to check same object
+same_object = (t1 is t3)          # usually False unless interned/aliased
 
 # Length
-print(f"Length of t1: {len(t1)}")             # 3
+length_t1 = len(t1)
 
+# ---------------------------
+# 4. Built-in functions & methods
+# ---------------------------
 
-# Built-in Functions
+nums = (5, 2, 8, 1, 9, 3, 7, 4, 6, 5)
 
-# BUILT-IN FUNCTIONS FOR TUPLES
-# ------------------------------
+min_val = min(nums)               # minimum value
+max_val = max(nums)               # maximum value
+sum_val = sum(nums)               # sum
+len_nums = len(nums)              # length
 
-numbers = (5, 2, 8, 1, 9, 3, 7, 4, 6, 5)
+# sorted() returns a new list (tuple unchanged)
+sorted_list = sorted(nums)        # list
+sorted_desc = sorted(nums, reverse=True)
 
-# min() - minimum value
-print(f"Minimum: {min(numbers)}")             # 1
+# methods available on tuple objects (immutability -> only count and index)
+count_5 = nums.count(5)           # occurrences of 5
+index_8 = nums.index(8)           # first index of 8
+index_5_after3 = nums.index(5, 3) # start search at position 3
 
-# max() - maximum value
-print(f"Maximum: {max(numbers)}")             # 9
-
-# sum() - sum of all elements
-print(f"Sum: {sum(numbers)}")                 # 50
-
-# len() - length of tuple
-print(f"Length: {len(numbers)}")              # 10
-
-# sorted() - returns sorted list (tuple remains unchanged)
-sorted_list = sorted(numbers)
-print(f"Sorted list: {sorted_list}")
-print(f"Original tuple unchanged: {numbers}")
-
-# sorted() with reverse
-sorted_desc = sorted(numbers, reverse=True)
-print(f"Sorted descending: {sorted_desc}")
-
-# count() - count occurrences
-print(f"Count of 5: {numbers.count(5)}")      # 2
-
-# index() - find first occurrence
-print(f"Index of 8: {numbers.index(8)}")      # 2
-print(f"Index of 5 from position 3: {numbers.index(5, 3)}")  # 9
-
-# any() - True if any element is True
+# any/all treat elements as truthy/falsy
 bool_tuple = (0, 0, 1, 0)
-print(f"any() on bool_tuple: {any(bool_tuple)}")  # True
+any_true = any(bool_tuple)        # True if any element truthy
+all_true = all(bool_tuple)        # True if all truthy
 
-# all() - True if all elements are True
-print(f"all() on bool_tuple: {all(bool_tuple)}")  # False
+# enumerate and zip examples
+for index, value in enumerate(nums[:5]):  # enumerate yields (index, value) pairs
+    pass
 
-# enumerate() - get index-value pairs
-for index, value in enumerate(numbers[:5]):
-    print(f"Index {index}: {value}")
-
-# zip() - combine multiple tuples
 names = ("Alice", "Bob", "Charlie")
 ages = (25, 30, 35)
-combined = tuple(zip(names, ages))
-print(f"Zipped: {combined}")                  # (('Alice', 25), ('Bob', 30), ('Charlie', 35))
+zipped = tuple(zip(names, ages))  # ((name, age), ...)
 
-
-# Tuple Methods
-# TUPLE METHODS
-# --------------
-
-my_tuple = (1, 2, 3, 2, 4, 2, 5)
-
-# count() - count occurrences of value
-print(f"Count of 2: {my_tuple.count(2)}")     # 3
-
-# index() - find index of value
-print(f"First index of 2: {my_tuple.index(2)}")  # 1
-print(f"Index of 2 after position 2: {my_tuple.index(2, 2)}")  # 3
-print(f"Index of 2 between 2 and 5: {my_tuple.index(2, 2, 5)}")  # 3
-
-# NOTE: No append(), insert(), remove(), pop(), clear() 
-# because tuples are IMMUTABLE
-
-# Converting Between Types
-# TYPE CONVERSIONS
-# ----------------
+# ---------------------------
+# 5. Conversions between types
+# ---------------------------
 
 my_tuple = (1, 2, 3, 4, 5)
 
-# Tuple to List
-list_from_tuple = list(my_tuple)
-print(f"Tuple to list: {list_from_tuple}")
+list_from_tuple = list(my_tuple)     # [1,2,3,4,5]
+set_from_tuple = set(my_tuple)       # {1,2,3,4,5} (order unspecified)
+str_from_tuple = ''.join(('H','e','l','l','o'))  # "Hello"
+tuple_from_list = tuple([1,2,3])     # (1,2,3)
+tuple_from_set = tuple({1,2,3})      # order unspecified
 
-# Tuple to Set (removes duplicates)
-set_from_tuple = set(my_tuple)
-print(f"Tuple to set: {set_from_tuple}")
+# ---------------------------
+# 6. Advanced tuple patterns
+# ---------------------------
 
-# Tuple to String (for strings)
-str_tuple = ('H', 'e', 'l', 'l', 'o')
-string_from_tuple = ''.join(str_tuple)
-print(f"Tuple to string: {string_from_tuple}")
+# Generator expression inside tuple() creates a tuple of computed values
+squares = tuple(x**2 for x in range(5))       # (0,1,4,9,16)
 
-# List to Tuple
-list_data = [1, 2, 3]
-tuple_from_list = tuple(list_data)
-print(f"List to tuple: {tuple_from_list}")
-
-# Set to Tuple
-set_data = {1, 2, 3}
-tuple_from_set = tuple(set_data)
-print(f"Set to tuple: {tuple_from_set}")
-
-
-# Advanced Tuple Operations
-# ADVANCED OPERATIONS
-# -------------------
-
-# Tuple comprehension (actually generator expression)
-squares = tuple(x**2 for x in range(5))
-print(f"Squares: {squares}")  # (0, 1, 4, 9, 16)
-
-# Filtering with tuple
+# Filtering and mapping via tuples uses generator expressions or map/filter then tuple()
 even_numbers = tuple(x for x in range(10) if x % 2 == 0)
-print(f"Even numbers: {even_numbers}")  # (0, 2, 4, 6, 8)
+doubled = tuple(map(lambda x: x*2, (1,2,3,4)))
+filtered = tuple(filter(lambda x: x > 2, (1,2,3,4,5)))
 
-# Mapping with tuple
-doubled = tuple(map(lambda x: x*2, (1, 2, 3, 4)))
-print(f"Doubled: {doubled}")  # (2, 4, 6, 8)
+# reduce example
+product = reduce(lambda x, y: x * y, (1,2,3,4))  # 24
 
-# Filter with tuple
-filtered = tuple(filter(lambda x: x > 2, (1, 2, 3, 4, 5)))
-print(f"Filtered (>2): {filtered}")  # (3, 4, 5)
-
-# Reduce (from functools)
-from functools import reduce
-product = reduce(lambda x, y: x * y, (1, 2, 3, 4))
-print(f"Product: {product}")  # 24
-
-# Sorting tuple of tuples
+# Sorting tuples (of tuples) returns list unless wrapped in tuple()
 data = ((3, "c"), (1, "a"), (2, "b"))
-sorted_data = tuple(sorted(data))
-print(f"Sorted: {sorted_data}")  # ((1, 'a'), (2, 'b'), (3, 'c'))
-
-# Sorting by second element
+sorted_data = tuple(sorted(data))                 # sorted by first element
 sorted_by_second = tuple(sorted(data, key=lambda x: x[1]))
-print(f"Sorted by second: {sorted_by_second}")  # ((1, 'a'), (2, 'b'), (3, 'c'))
 
+# Namedtuple for readable tuple-like records
+Student = namedtuple('Student', ['name', 'age', 'major'])
+student = Student("John", 25, "CS")
+# Access by attr: student.name student.age
 
-
-# Tuple as Dictionary Keys
-
-# TUPLE AS DICTIONARY KEYS
-# -------------------------
-
-# Tuples can be used as dictionary keys (lists cannot)
+# Tuples as dict keys (hashable)
 coordinates = {
     (0, 0): "Origin",
     (1, 0): "Right",
-    (0, 1): "Up",
-    (-1, 0): "Left",
-    (0, -1): "Down"
+    (0, 1): "Up"
 }
 
-print(f"Coordinate (0,0): {coordinates[(0, 0)]}")
-print(f"Coordinate (1,0): {coordinates[(1, 0)]}")
-
-# Iterating over dictionary with tuple keys
-for (x, y), label in coordinates.items():
-    print(f"Position ({x}, {y}): {label}")
-
-
-
-# Problem 1: Swap Two Variables Without Temp
-# PROBLEM 1: Swap two variables
-# ------------------------------
-
+# swap using unpacking
 def swap_variables(a, b):
-    """
-    Swap two variables using tuple unpacking
-    Time: O(1), Space: O(1)
-    """
-    print(f"Before swap: a={a}, b={b}")
+    # a,b = b,a performs tuple packing on right then unpacking on left
     a, b = b, a
-    print(f"After swap: a={a}, b={b}")
     return a, b
 
-# Test
-swap_variables(10, 20)
-
-
-# Problem 2: Return Multiple Values from Function
-# PROBLEM 2: Return multiple values
-# ---------------------------------
-
+# return multiple values (function returns a tuple implicitly)
 def get_min_max_avg(numbers):
-    """
-    Return min, max, and average of a list
-    Time: O(n), Space: O(1)
-    """
     if not numbers:
         return None, None, None
-    
-    min_val = min(numbers)
-    max_val = max(numbers)
-    avg_val = sum(numbers) / len(numbers)
-    
-    return min_val, max_val, avg_val
+    return min(numbers), max(numbers), sum(numbers)/len(numbers)
 
-# Test
-numbers = [10, 20, 30, 40, 50]
-min_val, max_val, avg_val = get_min_max_avg(numbers)
-print(f"Min: {min_val}, Max: {max_val}, Avg: {avg_val:.2f}")
-
-
-# Problem 3: Find Most Frequent Element
-# PROBLEM 3: Most frequent element
-# ---------------------------------
-
-def most_frequent_element(nums):
-    """
-    Find the most frequent element using tuple
-    Time: O(n), Space: O(n)
-    """
-    from collections import Counter
-    
-    # Count frequencies
-    freq = Counter(nums)
-    
-    # Get most common as tuple (element, count)
-    most_common = freq.most_common(1)[0]
-    
-    return most_common[0], most_common[1]
-
-# Test
-nums = [1, 3, 2, 1, 4, 1, 3, 2, 1]
-element, count = most_frequent_element(nums)
-print(f"Most frequent: {element} (appears {count} times)")
-
-
-# Problem 4: Merge Two Sorted Tuples
-# PROBLEM 4: Merge two sorted tuples
-# ----------------------------------
-
+# merge two sorted tuples (like merge step of merge sort)
 def merge_sorted_tuples(t1, t2):
-    """
-    Merge two sorted tuples into one sorted tuple
-    Time: O(n+m), Space: O(n+m)
-    """
     i = j = 0
     result = []
-    
     while i < len(t1) and j < len(t2):
         if t1[i] <= t2[j]:
             result.append(t1[i])
@@ -337,355 +205,386 @@ def merge_sorted_tuples(t1, t2):
         else:
             result.append(t2[j])
             j += 1
-    
-    # Add remaining elements
     result.extend(t1[i:])
     result.extend(t2[j:])
-    
     return tuple(result)
 
-# Test
-t1 = (1, 3, 5, 7)
-t2 = (2, 4, 6, 8)
-merged = merge_sorted_tuples(t1, t2)
-print(f"Merged: {merged}")  # (1, 2, 3, 4, 5, 6, 7, 8)
+# rotate tuple by k to the right
+def rotate_tuple(tup, k):
+    if not tup:
+        return tup
+    k = k % len(tup)
+    if k == 0:
+        return tup
+    return tup[-k:] + tup[:-k]
 
+# flatten nested tuple recursively
+def flatten_tuple(nested):
+    result = []
+    def _flatten(x):
+        if isinstance(x, tuple):
+            for item in x:
+                _flatten(item)
+        else:
+            result.append(x)
+    _flatten(nested)
+    return tuple(result)
 
-# Problem 5: Find Pair with Target Sum
-# PROBLEM 5: Two Sum Problem
-# --------------------------
-
-def two_sum(nums, target):
-    """
-    Find two numbers that sum to target
-    Returns tuple of indices or None
-    Time: O(n), Space: O(n)
-    """
-    seen = {}
-    
-    for i, num in enumerate(nums):
-        complement = target - num
-        if complement in seen:
-            return (seen[complement], i)
-        seen[num] = i
-    
-    return None
-
-# Test
-nums = [2, 7, 11, 15]
-target = 9
-result = two_sum(nums, target)
-print(f"Indices: {result}")  # (0, 1)
-
-
-# Problem 6: Remove Duplicates While Preserving Order
-# PROBLEM 6: Remove duplicates preserving order
-# ---------------------------------------------
-
+# remove duplicates preserving order (returns tuple)
 def remove_duplicates_preserve_order(data):
-    """
-    Remove duplicates while preserving order using tuple
-    Time: O(n), Space: O(n)
-    """
     seen = set()
     result = []
-    
     for item in data:
         if item not in seen:
             seen.add(item)
             result.append(item)
-    
     return tuple(result)
 
-# Test
-data = (1, 2, 2, 3, 4, 4, 4, 5)
-unique = remove_duplicates_preserve_order(data)
-print(f"Unique: {unique}")  # (1, 2, 3, 4, 5)
+# ---------------------------
+# 7. Interview-style problems using tuples
+# ---------------------------
 
+# Two-sum returning indices as tuple
+def two_sum(nums, target):
+    seen = {}
+    for i, num in enumerate(nums):
+        comp = target - num
+        if comp in seen:
+            return (seen[comp], i)
+        seen[num] = i
+    return None
 
-# Problem 7: Rotate Tuple
-# PROBLEM 7: Rotate tuple by k positions
-# --------------------------------------
+# Most frequent element using Counter.most_common -> returns (elem, count) tuple
+def most_frequent_element(nums):
+    if not nums:
+        return None, 0
+    freq = Counter(nums)
+    elem, cnt = freq.most_common(1)[0]
+    return elem, cnt
 
-def rotate_tuple(tup, k):
-    """
-    Rotate tuple by k positions to the right
-    Time: O(n), Space: O(n)
-    """
-    if not tup:
-        return tup
-    
-    k = k % len(tup)  # Handle k > len
-    return tup[-k:] + tup[:-k]
+# Flatten and merge patterns already above
 
-# Test
-tup = (1, 2, 3, 4, 5)
-print(f"Rotate by 2: {rotate_tuple(tup, 2)}")  # (4, 5, 1, 2, 3)
-print(f"Rotate by 7: {rotate_tuple(tup, 7)}")  # (4, 5, 1, 2, 3)
-
-
-
-# Problem 8: Flatten Nested Tuple
-
-# PROBLEM 8: Flatten nested tuple
-# -------------------------------
-
-def flatten_tuple(nested):
-    """
-    Flatten a nested tuple
-    Time: O(n), Space: O(n)
-    """
-    result = []
-    
-    def flatten_recursive(item):
-        if isinstance(item, tuple):
-            for sub_item in item:
-                flatten_recursive(sub_item)
-        else:
-            result.append(item)
-    
-    flatten_recursive(nested)
-    return tuple(result)
-
-# Test
-nested = (1, (2, 3), (4, (5, 6)), 7)
-flattened = flatten_tuple(nested)
-print(f"Flattened: {flattened}")  # (1, 2, 3, 4, 5, 6, 7)
-
-
-# Tuple vs List: When to Use
-# TUPLE VS LIST - USE CASES
-# -------------------------
-
-# USE TUPLE WHEN:
-# 1. Data should not change (immutable)
-# 2. Dictionary keys needed
-# 3. Faster iteration (slightly)
-# 4. Memory efficiency
-# 5. Returning multiple values from function
-# 6. Representing fixed data (coordinates, RGB values)
-
-# Examples:
-rgb = (255, 128, 0)  # RGB color (never changes)
-coordinates = (45.5, -122.6)  # GPS coordinates
-
-# USE LIST WHEN:
-# 1. Data needs to change (mutable)
-# 2. Need to add/remove elements
-# 3. Dynamic collection of items
-# 4. Need to sort in-place
-
-# Performance comparison
-import timeit
-
-# Tuple is slightly faster for iteration
-tuple_iter = timeit.timeit('for i in (1,2,3,4,5): pass', number=1000000)
-list_iter = timeit.timeit('for i in [1,2,3,4,5]: pass', number=1000000)
-
-print(f"Tuple iteration: {tuple_iter:.6f} seconds")
-print(f"List iteration: {list_iter:.6f} seconds")
-
-
-
-# COMMON INTERVIEW QUESTIONS
-# --------------------------
-
-# Q1: Why are tuples immutable?
-"""
-A: Tuples are immutable for:
-1. Performance optimization
-2. Hashable (can be used as dict keys)
-3. Data integrity (data won't change accidentally)
-4. Memory efficiency (smaller than lists)
-"""
-
-# Q2: How to convert tuple to list and vice versa?
-# Answer: Use list() and tuple() constructors
-
-# Q3: What is tuple unpacking?
-# Answer: Assigning tuple elements to variables in one line
-
-# Q4: When to use tuple over list?
-# Answer: When data is constant, need dict keys, return multiple values
-
-# Q5: Can tuple contain mutable elements?
-# Answer: Yes, tuples can contain lists, dictionaries, etc.
-mixed_tuple = (1, [2, 3], {"a": 4})
-print(f"Tuple with mutable elements: {mixed_tuple}")
-
-# Q6: How to modify a tuple?
-# Answer: Convert to list, modify, convert back to tuple
-def modify_tuple(tup, index, new_value):
-    temp_list = list(tup)
-    temp_list[index] = new_value
-    return tuple(temp_list)
-
-modified = modify_tuple((1, 2, 3), 1, 99)
-print(f"Modified tuple: {modified}")  # (1, 99, 3)
-
-# Q7: How to concatenate tuples?
-# Answer: Using + operator
-t1 = (1, 2)
-t2 = (3, 4)
-result = t1 + t2
-print(f"Concatenated: {result}")  # (1, 2, 3, 4)
-
-# Q8: How to multiply tuples?
-# Answer: Using * operator
-result = t1 * 3
-print(f"Multiplied: {result}")  # (1, 2, 1, 2, 1, 2)
-
-# Q9: How to check if element exists?
-# Answer: Using 'in' operator
-print(f"2 in (1,2,3): {2 in (1,2,3)}")  # True
-
-# Q10: How to get index of element?
-# Answer: Using index() method
-print(f"Index of 2: {(1,2,3).index(2)}")  # 1
-
-
-
-
-# PERFORMANCE COMPARISON
-# ----------------------
-
-import sys
-import time
-
-# Memory comparison
-list_memory = [1, 2, 3, 4, 5]
-tuple_memory = (1, 2, 3, 4, 5)
-
-print(f"List memory: {sys.getsizeof(list_memory)} bytes")
-print(f"Tuple memory: {sys.getsizeof(tuple_memory)} bytes")
-print(f"Tuple uses {sys.getsizeof(list_memory) - sys.getsizeof(tuple_memory)} bytes less")
-
-# Creation time comparison
-def measure_creation(n):
-    start = time.time()
-    list_comp = [i for i in range(n)]
-    list_time = time.time() - start
-    
-    start = time.time()
-    tuple_comp = tuple(i for i in range(n))
-    tuple_time = time.time() - start
-    
-    return list_time, tuple_time
-
-n = 1000000
-list_time, tuple_time = measure_creation(n)
-print(f"List creation time: {list_time:.6f} seconds")
-print(f"Tuple creation time: {tuple_time:.6f} seconds")
-print(f"Tuple is {((list_time - tuple_time) / list_time * 100):.2f}% faster")
-
-
-
-
-# ADVANCED Inteview PATTERNS
-
-
-# Pattern 1: Function returning multiple values with names
-def get_student_info():
-    return ("John", 25, "Computer Science")
-
-# Using namedtuple for better readability
-from collections import namedtuple
-
-Student = namedtuple('Student', ['name', 'age', 'major'])
-student = Student("John", 25, "Computer Science")
-print(f"Student: {student.name}, {student.age}, {student.major}")
-
-# Pattern 2: Tuple as function arguments
-def calculate(*args):
-    """Calculate sum and product of any number of arguments"""
-    return sum(args), reduce(lambda x, y: x * y, args) if args else 0
-
-print(f"Sum and Product: {calculate(1, 2, 3, 4)}")
-
-# Pattern 3: Tuple in dictionary comprehensions
-data = [("a", 1), ("b", 2), ("c", 3)]
-dict_from_tuples = {k: v for k, v in data}
-print(f"Dictionary from tuples: {dict_from_tuples}")
-
-# Pattern 4: Swapping using tuple (already covered)
-
-# Pattern 5: Comparing tuples lexicographically
-print(f"(1,2,3) < (1,2,4): {(1,2,3) < (1,2,4)}")  # True
-print(f"(1,2,3) < (1,2,3,1): {(1,2,3) < (1,2,3,1)}")  # True
-print(f"(1,2,3) == (1,2,3): {(1,2,3) == (1,2,3)}")  # True
-
-
-# ERROR HANDLING
-# --------------
-
+# safe tuple operation demonstrating error handling
 def safe_tuple_operation(data):
-    """
-    Demonstrates error handling with tuples
-    """
     try:
-        # Attempt to modify tuple (will raise TypeError)
+        # Attempt to modify tuple element (should raise TypeError)
         data[0] = 100
     except TypeError as e:
-        print(f"Caught error: {e} (tuples are immutable)")
-    
+        # explain immutability
+        err_msg = f"Caught TypeError: {e}"
     try:
-        # Attempt to get index that doesn't exist
-        print(data[10])
+        _ = data[10]   # may raise IndexError
     except IndexError as e:
-        print(f"Caught error: {e} (index out of range)")
-    
+        err_msg2 = f"Caught IndexError: {e}"
     try:
-        # Attempt to find value that doesn't exist
-        print(data.index(999))
+        data.index(999)  # may raise ValueError
     except ValueError as e:
-        print(f"Caught error: {e} (value not in tuple)")
+        err_msg3 = f"Caught ValueError: {e}"
+    return True  # function demonstrates handling, returns True to indicate completion
 
-# Test
-safe_tuple_operation((1, 2, 3))
+# ---------------------------
+# 8. Conditional statements (exhaustive cases & nesting)
+# ---------------------------
 
+# We'll build many conditional examples relevant to tuples and general Python code,
+# demonstrating operators, truthiness, short-circuiting, chained comparisons, nesting,
+# ternary expressions, identity and membership checks, and error-safe guards.
 
+# Example: classify a tuple based on contents and size
+def classify_tuple(tup):
+    # guard: ensure tup is actually a tuple
+    if tup is None:                       # identity check for None
+        return "no tuple"
+    if not isinstance(tup, tuple):        # type check
+        return "not a tuple"
+    if not tup:                           # emptiness check (falsy if empty)
+        return "empty tuple"
 
+    # length-based branches
+    n = len(tup)
+    if n == 1:
+        return "singleton tuple"
+    elif 2 <= n <= 4:
+        return "small tuple"
+    elif n > 4:
+        # further nested checks based on content
+        # check for all elements being numbers (use all + isinstance)
+        if all(isinstance(x, (int, float)) for x in tup):
+            # chained comparison example: check if all between 0 and 100
+            if all(0 <= x <= 100 for x in tup):
+                return "large numeric tuple in range"
+            else:
+                return "large numeric tuple out of range"
+        # check if tuple contains mutable items (like list/dict)
+        elif any(isinstance(x, (list, dict, set)) for x in tup):
+            return "large tuple with mutable elements"
+        else:
+            return "large tuple of mixed types"
+    else:
+        return "unknown"
 
-# QUICK REFERENCE CARD
-# --------------------
+# Ternary example
+def tuple_status(tup):
+    return "empty" if not tup else "non-empty"
 
-# Creation
-t = ()                     # Empty
-t = (1,)                   # Single element (comma needed!)
-t = (1, 2, 3)              # Multiple elements
-t = tuple([1, 2, 3])       # From list
+# Short-circuit example using callables to show lazy evaluation
+def short_circuit_demo(is_ready_fn, get_value_fn):
+    # if is_ready_fn() is False, get_value_fn() is not called due to 'and' short-circuit
+    if is_ready_fn() and get_value_fn():
+        return True
+    return False
 
-# Access
-t[0]                       # First element
-t[-1]                      # Last element
-t[1:3]                     # Slicing
+# Nested condition with membership and identity
+def nested_permissions(user):
+    """
+    user expected as dict with keys: 'role', 'active', 'permissions' (tuple/list)
+    Demonstrates nested if/elif/else, membership, 'in', identity 'is', and ternary usage.
+    """
+    if user is None:
+        return "no user"
 
-# Operations
-t1 + t2                    # Concatenation
-t * 3                      # Repetition
-2 in t                     # Membership
-len(t)                     # Length
+    # guard clause: ensure dictionary structure
+    if not isinstance(user, dict):
+        return "invalid user object"
 
-# Methods
-t.count(x)                 # Count occurrences
-t.index(x)                 # Find index
+    if not user.get('active', False):
+        return "inactive"
 
-# Functions
-min(t), max(t)             # Min, max
-sum(t)                     # Sum
-sorted(t)                  # Sorted list
-tuple(sorted(t))           # Sorted tuple
+    role = user.get('role', 'guest')
+    perms = tuple(user.get('permissions', ()))  # convert to tuple for membership checks
 
-# Unpacking
-a, b, c = t                # Basic unpacking
-a, *b = t                  # Extended unpacking
+    if role == 'admin':
+        # nested checks for admin
+        if 'all' in perms:
+            return "admin: full access"
+        elif 'manage' in perms:
+            return "admin: manage access"
+        else:
+            # ternary: return limited if age < 18 else admin-limited
+            return "admin-limited" if user.get('age', 0) >= 18 else "admin-underage"
+    elif role == 'editor':
+        # combined logical operators
+        if ('edit' in perms and 'publish' in perms) or user.get('senior', False):
+            return "editor: publish"
+        elif 'edit' in perms:
+            return "editor: edit only"
+        else:
+            return "editor: no edit perms"
+    elif role == 'viewer':
+        return "viewer"
+    else:
+        # default: guest; nested ternary to decide level from groups
+        groups = user.get('groups', ())
+        return ("guest-public" if 'public' in groups else "guest-private") if groups else "guest"
 
-# Conversion
-list(t)                    # To list
-set(t)                     # To set
-tuple(list)                # From list
+# Demonstration of chained comparisons, bitwise example, and tuple content checks
+def complex_checks(tup):
+    # ensure tuple
+    if not isinstance(tup, tuple):
+        raise TypeError("Expected tuple")
 
-# Hashable (can be dict key)
-d = {t: "value"}           # Tuple as key
+    results = {}
+    # chained comparison: check first element within range if numeric
+    if tup and isinstance(tup[0], (int, float)):
+        x = tup[0]
+        results['first_in_range'] = (0 <= x <= 10)  # uses chained comparison
+    else:
+        results['first_in_range'] = False
 
+    # bitwise operator example on integers present in tuple
+    ints = [i for i in tup if isinstance(i, int)]
+    if len(ints) >= 2:
+        a, b = ints[0], ints[1]
+        results['bitwise_and'] = a & b
+        results['bitwise_or'] = a | b
+        results['bitwise_xor'] = a ^ b
+    else:
+        results['bitwise'] = None
 
+    # membership and identity
+    results['has_zero'] = (0 in tup)
+    results['is_singleton'] = (len(tup) == 1)
+
+    return results
+
+# ---------------------------
+# 9. Operators used in real-life code (examples)
+# ---------------------------
+
+# Arithmetic: + - * / // % ** (used in calculations)
+def arithmetic_examples(a, b):
+    return {
+        'add': a + b,
+        'sub': a - b,
+        'mul': a * b,
+        'true_div': a / b if b != 0 else None,
+        'floor_div': a // b if b != 0 else None,
+        'mod': a % b if b != 0 else None,
+        'pow': a ** b
+    }
+
+# Comparison: == != < <= > >= (used for sorting, branching)
+def compare_examples(x, y):
+    return {
+        'eq': x == y,
+        'ne': x != y,
+        'lt': x < y,
+        'le': x <= y,
+        'gt': x > y,
+        'ge': x >= y
+    }
+
+# Logical: and, or, not (used in guards and combined conditions)
+def logical_examples(a, b):
+    return {
+        'and': bool(a and b),
+        'or': bool(a or b),
+        'not_a': not a
+    }
+
+# Membership: in, not in (used for membership checks)
+def membership_examples(elem, seq):
+    return {
+        'in': elem in seq,
+        'not_in': elem not in seq
+    }
+
+# Identity: is, is not (used to check None or same object)
+def identity_examples(a, b):
+    return {
+        'is': a is b,
+        'is_not': a is not b
+    }
+
+# Bitwise: &, |, ^, <<, >>, ~ (used in low-level or performance code)
+def bitwise_examples(a, b):
+    return {
+        'and': a & b,
+        'or': a | b,
+        'xor': a ^ b,
+        'lshift': a << 1,
+        'rshift': a >> 1,
+        'invert': ~a
+    }
+
+# Augmented assignments: +=, -=, *=, etc. (used for counters and accumulation)
+def augmented_assignment_demo():
+    x = 10
+    x += 5  # x = x + 5
+    x *= 2  # x = x * 2
+    x -= 3
+    x //= 4
+    x ^= 2  # bitwise XOR and assign
+    return x
+
+# ---------------------------
+# 10. Performance comparisons and memory
+# ---------------------------
+
+# Memory size difference between list and tuple containers
+list_mem = [1,2,3,4,5]
+tuple_mem = (1,2,3,4,5)
+list_size = sys.getsizeof(list_mem)
+tuple_size = sys.getsizeof(tuple_mem)
+memory_saving = list_size - tuple_size
+
+# Creation time comparison (small demonstration)
+tuple_iter_time = timeit.timeit('for i in (1,2,3,4,5): pass', number=1000000)
+list_iter_time = timeit.timeit('for i in [1,2,3,4,5]: pass', number=1000000)
+
+# ---------------------------
+# 11. Error handling patterns (safe code)
+# ---------------------------
+
+def modify_tuple_safe(tup, index, new_value):
+    # To 'modify' a tuple, convert to list, change, convert back
+    if not isinstance(tup, tuple):
+        raise TypeError("Expected tuple")
+    lst = list(tup)
+    if not (-len(lst) <= index < len(lst)):
+        raise IndexError("Index out of range")
+    lst[index] = new_value
+    return tuple(lst)
+
+# Safe index retrieval with default
+def index_or_default(tup, value, default=-1):
+    try:
+        return tup.index(value)
+    except ValueError:
+        return default
+
+# ---------------------------
+# 12. Quick reference (examples)
+# ---------------------------
+
+# Creation: (), (x,), tuple(iterable)
+# Access: tup[i], tup[-1], tup[a:b]
+# Operations: +, *, in, len(), count(), index()
+# Conversion: list(tup), set(tup), tuple(list)
+# Use-cases: immutability, dict keys, function returns
+
+# ---------------------------
+# 13. Demo / Tests
+# ---------------------------
+
+if __name__ == "__main__":
+    # Basic prints
+    print("empty_tuple:", empty_tuple)
+    print("single_tuple:", single_tuple, type(single_tuple))
+    print("not_tuple:", not_tuple, type(not_tuple))
+    print("from_list:", from_list)
+    print("from_string:", from_string)
+    print("from_range:", from_range)
+    print("unpacked a,b,c:", a, b, c)
+    print("first,middle,last:", first, middle, last)
+
+    # Access
+    print("first_elem:", first_elem, "last_elem:", last_elem, "second_last:", second_last)
+    print("first_three:", first_three, "reversed:", reversed_tuple)
+
+    # Operations
+    print("concatenated:", concatenated)
+    print("repeated:", repeated)
+    print("membership 2 in t1:", has_two, "5 in t1:", has_five)
+
+    # Built-ins & methods
+    print("min,max,sum,len:", min_val, max_val, sum_val, len_nums)
+    print("sorted_list sample:", sorted_list[:5])
+    print("count_5,index_8:", count_5, index_8)
+
+    # Conversions
+    print("list_from_tuple:", list_from_tuple)
+    print("set_from_tuple:", set_from_tuple)
+
+    # Advanced
+    print("squares:", squares)
+    print("namedtuple student:", student)
+    print("coordinates dict lookup:", coordinates[(0,0)])
+
+    # Functions
+    print("swap(10,20):", swap_variables(10,20))
+    print("get_min_max_avg:", get_min_max_avg([10,20,30,40,50]))
+    print("merge_sorted:", merge_sorted_tuples((1,3,5),(2,4,6)))
+    print("rotate (1..5) by 2:", rotate_tuple((1,2,3,4,5), 2))
+    print("flatten nested:", flatten_tuple((1,(2,3),(4,(5,6)))))
+
+    # Interview problems
+    print("two_sum indices:", two_sum([2,7,11,15], 9))
+    print("most_frequent:", most_frequent_element([1,3,2,1,4,1,3,2,1]))
+    print("remove_duplicates_preserve_order:", remove_duplicates_preserve_order((1,2,2,3,4,4,5)))
+
+    # Conditionals
+    print("classify_tuple:", classify_tuple((1,2,3)))
+    print("tuple_status empty:", tuple_status(()), "non-empty:", tuple_status((1,)))
+    print("nested_permissions:", nested_permissions({'role':'admin','active':True,'permissions':('manage',),'age':20}))
+
+    # Operators examples
+    print("arithmetic_examples:", arithmetic_examples(10,3))
+    print("compare_examples:", compare_examples(2,3))
+    print("logical_examples:", logical_examples(True, False))
+    print("membership_examples:", membership_examples(2, (1,2,3)))
+    print("identity_examples:", identity_examples((1,2), (1,2)))  # likely False
+
+    # Performance/memory
+    print(f"list_size={list_size}, tuple_size={tuple_size}, memory_saving={memory_saving}")
+    print(f"tuple iter time: {tuple_iter_time:.6f}, list iter time: {list_iter_time:.6f}")

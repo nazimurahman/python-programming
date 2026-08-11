@@ -1,295 +1,288 @@
-# List Creation and Initialization
-# Empty list creation
-empty_list = []  # Most common way
-empty_list2 = list()  # Using constructor
+"""
+lists_with_conditionals.py
+Comprehensive examples of Python list usage, list-related algorithms, and many varieties
+of conditional statements. Designed to be readable, runnable, and educational.
+"""
 
-# List with initial values
-numbers = [1, 2, 3, 4, 5]
-fruits = ['apple', 'banana', 'orange']
-mixed = [1, 'hello', 3.14, True]  # Heterogeneous list
+# Basic imports used in multiple examples
+from array import array           # for memory-efficient numeric arrays
+from functools import reduce     # for reduce examples
+import bisect                    # for binary search helpers
+import copy                      # for shallow/deep copy functions
+import sys                       # for memory size examples
+import math                      # for math helpers used below
+import timeit                    # for performance micro-benchmarks
 
-# List comprehension - powerful creation technique
-squares = [x**2 for x in range(10)]  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
-even_numbers = [x for x in range(20) if x % 2 == 0]  # [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+# ---------------------------
+# 1. List creation and initialization
+# ---------------------------
 
-# Nested lists (matrix)
+# Empty list creation (two equivalent ways)
+empty_list = []       # literal empty list: fastest and most common
+empty_list2 = list()  # constructor form, returns empty list too
+
+# List with initial values (homogeneous or heterogeneous)
+numbers = [1, 2, 3, 4, 5]                       # integers
+fruits = ['apple', 'banana', 'orange']         # strings
+mixed = [1, 'hello', 3.14, True]               # different types mixed in one list
+
+# List comprehensions (concise, readable)
+squares = [x**2 for x in range(10)]            # list of squares: 0..9 squared
+even_numbers = [x for x in range(20) if x % 2 == 0]
+
+# Nested lists: represent matrices or 2D grids
 matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
+# Defensive check: avoid errors when using functions that expect non-empty lists
+def safe_first(lst):
+    # Return first element or None if list empty; avoids IndexError.
+    return lst[0] if lst else None
 
-# Basic List Operations
-# Accessing elements (Indexing - 0-based)
-fruits = ['apple', 'banana', 'orange', 'grape', 'mango']
-first = fruits[0]  # 'apple'
-last = fruits[-1]  # 'mango' (negative indexing)
-second_last = fruits[-2]  # 'grape'
+# ---------------------------
+# 2. Accessing and slicing
+# ---------------------------
 
-# Slicing - [start:end:step]
-fruits = ['apple', 'banana', 'orange', 'grape', 'mango']
-first_two = fruits[0:2]  # ['apple', 'banana']
-last_three = fruits[-3:]  # ['orange', 'grape', 'mango']
-reverse = fruits[::-1]  # ['mango', 'grape', 'orange', 'banana', 'apple']
-every_second = fruits[::2]  # ['apple', 'orange', 'mango']
+fruits = ['apple', 'banana', 'orange', 'grape', 'mango']  # example list
 
-# Length of list
-length = len(fruits)  # 5
+first = fruits[0]        # index 0 => first element
+last = fruits[-1]        # negative index -1 => last element
+second_last = fruits[-2] # -2 => second last
 
-# Membership testing
-has_banana = 'banana' in fruits  # True
-has_peach = 'peach' in fruits  # False
+# Slicing uses [start:end:step], end is exclusive
+first_two = fruits[0:2]      # elements at indices 0 and 1
+last_three = fruits[-3:]     # last three elements
+reverse = fruits[::-1]       # reversed list using step -1
+every_second = fruits[::2]   # every second item starting at index 0
 
+# Length and membership
+length = len(fruits)                 # number of elements
+has_banana = 'banana' in fruits      # True if 'banana' present
+has_peach = 'peach' in fruits        # False if 'peach' not present
 
-# Adding Elements to List
-# append() - Add single element at end
+# ---------------------------
+# 3. Adding elements
+# ---------------------------
+
 fruits = ['apple', 'banana']
-fruits.append('orange')  # ['apple', 'banana', 'orange']
+fruits.append('orange')              # add to end
 
-# insert() - Add element at specific position
-fruits.insert(1, 'grape')  # ['apple', 'grape', 'banana', 'orange']
+fruits.insert(1, 'grape')            # insert at index 1 (shifts later elements)
 
-# extend() - Add multiple elements (another iterable)
-fruits.extend(['mango', 'peach'])  # ['apple', 'grape', 'banana', 'orange', 'mango', 'peach']
+fruits.extend(['mango', 'peach'])    # extend by another iterable (adds each element)
 
-# Concatenation (+ operator)
+# Concatenation and repetition (non-destructive unless reassigned)
 list1 = [1, 2, 3]
 list2 = [4, 5, 6]
-combined = list1 + list2  # [1, 2, 3, 4, 5, 6]
+combined = list1 + list2             # new list, original lists unchanged
 
-# Repetition (* operator)
-repeated = [1, 2] * 3  # [1, 2, 1, 2, 1, 2]
+repeated = [1, 2] * 3                # repetition operator, repeats elements
 
-# Removing Elements from List
-# remove() - Remove first occurrence of value
+# ---------------------------
+# 4. Removing elements
+# ---------------------------
+
 fruits = ['apple', 'banana', 'orange', 'banana']
-fruits.remove('banana')  # ['apple', 'orange', 'banana'] (removes first banana only)
+fruits.remove('banana')              # removes first matching value (raises ValueError if absent)
 
-# pop() - Remove and return element at index (default last)
+# Use try/except to avoid exception when removing unknown item
+try:
+    fruits.remove('pineapple')
+except ValueError:
+    # safe fallback when item not present
+    pass
+
 fruits = ['apple', 'banana', 'orange']
-last = fruits.pop()  # 'orange', fruits = ['apple', 'banana']
-first = fruits.pop(0)  # 'apple', fruits = ['banana']
+last_item = fruits.pop()             # pop without index removes last and returns it
+first_item = fruits.pop(0)           # pop index 0 removes and returns first element
 
-# del - Delete element(s) by index
 fruits = ['apple', 'banana', 'orange', 'grape']
-del fruits[1]  # ['apple', 'orange', 'grape']
-del fruits[1:3]  # ['apple'] (slice deletion)
+del fruits[1]                        # deletes element by index
+del fruits[1:3]                      # deletes a slice of elements
 
-# clear() - Remove all elements
-fruits.clear()  # []
+fruits.clear()                       # remove all elements (fruits becomes [])
 
-# Searching and Finding Elements
-# index() - Find index of first occurrence
+# ---------------------------
+# 5. Searching and counting
+# ---------------------------
+
 fruits = ['apple', 'banana', 'orange', 'banana']
-index = fruits.index('banana')  # 1
-# index = fruits.index('grape')  # ValueError: 'grape' is not in list
+index_banana = fruits.index('banana') # index of first match (ValueError if missing)
 
-# count() - Count occurrences
-count = fruits.count('banana')  # 2
+count_banana = fruits.count('banana') # number of occurrences
 
-# Linear search (manual)
+# Linear search example (explicit)
 def find_element(lst, target):
+    # Return index of first target or -1 if not found; uses enumerate for index/value
     for i, element in enumerate(lst):
         if element == target:
             return i
     return -1
 
-# Binary search (list must be sorted)
-import bisect
+# Binary search using bisect (requires sorted list)
 sorted_list = [1, 3, 5, 7, 9, 11]
-position = bisect.bisect_left(sorted_list, 7)  # 3
-position = bisect.bisect_right(sorted_list, 7)  # 4
+pos_left = bisect.bisect_left(sorted_list, 7)   # insertion index to keep order (left)
+pos_right = bisect.bisect_right(sorted_list, 7) # insertion index to the right
 
-# Sorting and Reversing
-# sort() - Sort list in-place (modifies original)
+# ---------------------------
+# 6. Sorting and reversing
+# ---------------------------
+
 numbers = [3, 1, 4, 1, 5, 9, 2]
-numbers.sort()  # [1, 1, 2, 3, 4, 5, 9]
-numbers.sort(reverse=True)  # [9, 5, 4, 3, 2, 1, 1]
+numbers.sort()                 # sorts in-place
+numbers.sort(reverse=True)     # sorts in-place descending
 
-# sorted() - Return new sorted list (original unchanged)
 numbers = [3, 1, 4, 1, 5, 9, 2]
-sorted_numbers = sorted(numbers)  # [1, 1, 2, 3, 4, 5, 9]
-sorted_desc = sorted(numbers, reverse=True)  # [9, 5, 4, 3, 2, 1, 1]
+sorted_numbers = sorted(numbers)                  # returns a new sorted list
+sorted_desc = sorted(numbers, reverse=True)
 
-# Custom sorting with key function
 words = ['banana', 'apple', 'cherry', 'date']
-words.sort(key=len)  # Sort by length: ['date', 'apple', 'banana', 'cherry']
-words.sort(key=lambda x: x[-1])  # Sort by last character
+words.sort(key=len)            # sort by string length, mutates words
+words.sort(key=lambda x: x[-1])# sort by last character
 
-# reverse() - Reverse list in-place
 fruits = ['apple', 'banana', 'orange']
-fruits.reverse()  # ['orange', 'banana', 'apple']
+fruits.reverse()               # reverse in-place
+for fruit in reversed(fruits): # reversed() returns iterator, original unchanged
+    pass
 
-# reversed() - Return reverse iterator (original unchanged)
+# ---------------------------
+# 7. Copying lists (shallow vs deep)
+# ---------------------------
+
+original = [1, 2, [3, 4]]      # nested list includes inner list
+
+copy1 = original.copy()        # shallow copy; inner list is shared
+copy2 = list(original)         # also shallow
+copy3 = original[:]            # slicing shallow copy
+copy4 = copy.copy(original)    # shallow via copy module
+
+deep_copy = copy.deepcopy(original) # deep copy duplicates nested objects
+deep_copy[2][0] = 99                 # modifying deep copy doesn't change original
+
+# ---------------------------
+# 8. Iteration patterns
+# ---------------------------
+
 fruits = ['apple', 'banana', 'orange']
-for fruit in reversed(fruits):
-    print(fruit)  # orange, banana, apple
+for fruit in fruits:                     # iterate values directly
+    pass
 
+for index, fruit in enumerate(fruits):   # iterate with index starting at 0
+    pass
 
-# List Copying
+for index, fruit in enumerate(fruits, start=1): # index starts at 1
+    pass
 
-# Shallow copy methods
-original = [1, 2, [3, 4]]
-
-# Method 1: copy() method
-copy1 = original.copy()
-
-# Method 2: list() constructor
-copy2 = list(original)
-
-# Method 3: slicing
-copy3 = original[:]
-
-# Method 4: copy module
-import copy
-copy4 = copy.copy(original)
-
-# Deep copy (for nested lists)
-deep_copy = copy.deepcopy(original)
-# Modifying nested list in deep copy doesn't affect original
-deep_copy[2][0] = 99  # Only deep_copy changes
-
-
-# List Iteration Techniques
-
-# Basic iteration
-fruits = ['apple', 'banana', 'orange']
-for fruit in fruits:
-    print(fruit)
-
-# With index using enumerate
-for index, fruit in enumerate(fruits):
-    print(f"Index {index}: {fruit}")
-
-# With starting index
-for index, fruit in enumerate(fruits, start=1):
-    print(f"Position {index}: {fruit}")
-
-# Multiple lists simultaneously (zip)
 names = ['Alice', 'Bob', 'Charlie']
 scores = [85, 92, 78]
-for name, score in zip(names, scores):
-    print(f"{name}: {score}")
+for name, score in zip(names, scores):   # iterate two lists in parallel; stops at shortest
+    pass
 
-# List comprehension iteration
-squared = [x**2 for x in range(5)]  # [0, 1, 4, 9, 16]
+squared = [x**2 for x in range(5)]       # list comprehension iteration
 
+# ---------------------------
+# 9. Data analysis helpers
+# ---------------------------
 
-# List Methods for Data Analysis
-
-# min(), max(), sum()
 numbers = [3, 1, 4, 1, 5, 9, 2]
-minimum = min(numbers)  # 1
-maximum = max(numbers)  # 9
-total = sum(numbers)  # 25
-average = sum(numbers) / len(numbers)  # 3.571...
+minimum = min(numbers)                   # smallest element
+maximum = max(numbers)                   # largest element
 
-# all() - True if all elements are True
-all_true = all([True, True, True])  # True
-all_numbers = all([1, 2, 3])  # True (non-zero numbers are truthy)
-mixed = all([1, 0, 3])  # False
+# Avoid division by zero when computing average:
+average = (sum(numbers) / len(numbers)) if numbers else None
 
-# any() - True if any element is True
-any_true = any([False, False, True])  # True
-any_numbers = any([0, 0, 5])  # True
+all_true = all([True, True, True])       # True if all elements truthy
+some_truthy = any([0, 0, 5])             # True if any element truthy
 
-# filter() - Filter elements based on condition
-numbers = [1, 2, 3, 4, 5, 6]
-even_numbers = list(filter(lambda x: x % 2 == 0, numbers))  # [2, 4, 6]
+even_numbers_filtered = list(filter(lambda x: x % 2 == 0, numbers))  # filter usage
+squared_map = list(map(lambda x: x**2, numbers))                     # map usage
 
-# map() - Apply function to all elements
-numbers = [1, 2, 3, 4, 5]
-squared = list(map(lambda x: x**2, numbers))  # [1, 4, 9, 16, 25]
+product = reduce(lambda x, y: x * y, [1, 2, 3, 4], 1)                 # reduce with initializer
 
-# reduce() - Reduce list to single value
-from functools import reduce
-product = reduce(lambda x, y: x * y, [1, 2, 3, 4])  # 24
+# ---------------------------
+# 10. Advanced operations
+# ---------------------------
 
-
-# Advanced List Operations
-
-# Flatten nested list
+# Flatten nested list using comprehension
 nested = [[1, 2], [3, 4], [5, 6]]
-flattened = [item for sublist in nested for item in sublist]  # [1, 2, 3, 4, 5, 6]
+flattened = [item for sublist in nested for item in sublist]
 
 # Remove duplicates while preserving order
 def remove_duplicates(lst):
     seen = set()
-    return [x for x in lst if not (x in seen or seen.add(x))]
+    result = []
+    for x in lst:
+        if x not in seen:
+            seen.add(x)
+            result.append(x)
+    return result
 
 original = [1, 2, 2, 3, 4, 4, 5]
-unique = remove_duplicates(original)  # [1, 2, 3, 4, 5]
+unique = remove_duplicates(original)
 
-# Grouping elements by condition
-numbers = [1, 2, 3, 4, 5, 6]
-even = [x for x in numbers if x % 2 == 0]  # [2, 4, 6]
-odd = [x for x in numbers if x % 2 != 0]  # [1, 3, 5]
-
-# Partition list
+# Partition list into two lists by condition
 def partition(lst, condition):
-    return [x for x in lst if condition(x)], [x for x in lst if not condition(x)]
+    # returns (matching, non_matching)
+    matching = [x for x in lst if condition(x)]
+    non_matching = [x for x in lst if not condition(x)]
+    return matching, non_matching
 
 numbers = [1, 2, 3, 4, 5, 6]
 even, odd = partition(numbers, lambda x: x % 2 == 0)
 
 # Chunk list into smaller lists
 def chunk_list(lst, chunk_size):
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be positive")
     return [lst[i:i + chunk_size] for i in range(0, len(lst), chunk_size)]
 
 data = [1, 2, 3, 4, 5, 6, 7, 8]
-chunks = chunk_list(data, 3)  # [[1, 2, 3], [4, 5, 6], [7, 8]]
+chunks = chunk_list(data, 3)
 
+# ---------------------------
+# 11. Comparisons, subset, differences
+# ---------------------------
 
-# List Comparison and Equality
-
-# Comparing lists (lexicographical order)
 list1 = [1, 2, 3]
 list2 = [1, 2, 3]
 list3 = [1, 2, 4]
 
-print(list1 == list2)  # True
-print(list1 == list3)  # False
-print(list1 < list3)   # True (3 < 4)
+# Equality compares element-wise
+assert (list1 == list2) is True
+assert (list1 == list3) is False
+assert (list1 < list3) is True  # lexicographic comparison: compares first differing element
 
-# Check if one list is subset/superset
 def is_subset(small, large):
+    # check each item in small is present in large
     return all(item in large for item in small)
 
 subset = [1, 2]
 superset = [1, 2, 3, 4]
-is_subset(subset, superset)  # True
+is_subset(subset, superset)
 
-# Find common elements
+# Common elements
 list1 = [1, 2, 3, 4]
 list2 = [3, 4, 5, 6]
-common = [x for x in list1 if x in list2]  # [3, 4]
+common = [x for x in list1 if x in list2]
+diff = [x for x in list1 if x not in list2]
 
-# Find differences
-diff = [x for x in list1 if x not in list2]  # [1, 2]
+# ---------------------------
+# 12. Memory and performance notes
+# ---------------------------
 
+# Large list vs generator (memory demo)
+list_comp = [x**2 for x in range(100000)]    # big memory usage
+gen_exp = (x**2 for x in range(100000))      # generator uses much less memory
+size_list = sys.getsizeof(list_comp)
+size_gen = sys.getsizeof(gen_exp)
 
-# Memory Optimization and Performance
+# Using array module for numeric data (more compact)
+numbers_array = array('i', [1, 2, 3, 4, 5])
 
-# List vs Generator (memory efficient)
-import sys
-
-# List comprehension (eager evaluation)
-list_comp = [x**2 for x in range(1000000)]
-memory_usage = sys.getsizeof(list_comp)  # Large memory usage
-
-# Generator expression (lazy evaluation)
-gen_exp = (x**2 for x in range(1000000))
-memory_usage = sys.getsizeof(gen_exp)  # Small memory usage
-
-# Using list of lists vs array module
-from array import array
-# For large numeric data
-numbers = array('i', [1, 2, 3, 4, 5])  # More memory efficient
-
-# Pre-allocating list for performance
+# Pre-allocation for repeated append-heavy loops
 n = 1000000
-preallocated = [0] * n  # Faster than append
+# preallocated = [0] * n   # uncomment if you need real preallocation; memory heavy
 
-# Performance comparison
-import timeit
-
+# Performance micro-benchmark functions
 def using_append():
     result = []
     for i in range(1000):
@@ -299,16 +292,17 @@ def using_append():
 def using_comprehension():
     return [i for i in range(1000)]
 
-# List comprehension is usually faster
+# ---------------------------
+# 13. Common interview problems (cleaned, safe)
+# ---------------------------
 
-
-# Common Interview Problems: -> Problem Two Sum
 def two_sum(nums, target):
     """
-    Find two numbers in list that sum to target.
+    Find two indices where nums[i] + nums[j] == target.
     Time: O(n), Space: O(n)
+    Returns list of indices or [] if none found.
     """
-    seen = {}
+    seen = {}  # maps number -> index
     for i, num in enumerate(nums):
         complement = target - num
         if complement in seen:
@@ -316,82 +310,50 @@ def two_sum(nums, target):
         seen[num] = i
     return []
 
-# Test
-nums = [2, 7, 11, 15]
-target = 9
-print(two_sum(nums, target))  # [0, 1]
-
-
-# Problem Find Missing Number
+# find_missing_number: assume nums contains distinct numbers from 0..n with one missing
 def find_missing_number(nums):
-    """
-    Find missing number in list of 0 to n
-    Time: O(n), Space: O(1)
-    """
     n = len(nums)
+    # expected sum for numbers 0..n is n*(n+1)//2 if one number missing from 0..n
+    # But if list len is n and numbers are from 0..n with one missing, expected_sum is n*(n+1)//2
     expected_sum = n * (n + 1) // 2
     actual_sum = sum(nums)
     return expected_sum - actual_sum
 
-# Test
-nums = [3, 0, 1]
-print(find_missing_number(nums))  # 2
-
-# Problem Rotate Array
-
+# rotate_array: rotate in-place to right by k steps; handle edge cases
 def rotate_array(nums, k):
-    """
-    Rotate array to right by k steps
-    Time: O(n), Space: O(1)
-    """
+    if not nums:
+        return nums
     n = len(nums)
-    k = k % n  # Handle k > n
-    nums[:] = nums[-k:] + nums[:-k]  # In-place rotation
+    k = k % n
+    if k == 0:
+        return nums
+    nums[:] = nums[-k:] + nums[:-k]
     return nums
 
-# Test
-nums = [1, 2, 3, 4, 5]
-print(rotate_array(nums, 2))  # [4, 5, 1, 2, 3]
-
-# Problem Find Duplicate
+# find_duplicate using Floyd's tortoise and hare (works when numbers are in 1..n and one duplicate)
 def find_duplicate(nums):
-    """
-    Find duplicate in array (Floyd's algorithm)
-    Time: O(n), Space: O(1)
-    """
+    if not nums:
+        raise ValueError("nums must be non-empty")
     slow = nums[0]
     fast = nums[0]
-    
-    # Find intersection point
+    # Find intersection
     while True:
         slow = nums[slow]
         fast = nums[nums[fast]]
         if slow == fast:
             break
-    
-    # Find duplicate
+    # Find entrance to cycle
     slow = nums[0]
     while slow != fast:
         slow = nums[slow]
         fast = nums[fast]
-    
     return slow
 
-# Test
-nums = [1, 3, 4, 2, 2]
-print(find_duplicate(nums))  # 2
-
-# Problem Merge Sorted Arrays
-
+# merge_sorted_arrays: merge nums2 into nums1 which has buffer at end (LeetCode style)
 def merge_sorted_arrays(nums1, m, nums2, n):
-    """
-    Merge nums2 into nums1 (in-place)
-    Time: O(m+n), Space: O(1)
-    """
     p1 = m - 1
     p2 = n - 1
     p = m + n - 1
-    
     while p2 >= 0:
         if p1 >= 0 and nums1[p1] > nums2[p2]:
             nums1[p] = nums1[p1]
@@ -402,74 +364,216 @@ def merge_sorted_arrays(nums1, m, nums2, n):
         p -= 1
     return nums1
 
-# Test
-nums1 = [1, 2, 3, 0, 0, 0]
-m = 3
-nums2 = [2, 5, 6]
-n = 3
-print(merge_sorted_arrays(nums1, m, nums2, n))  # [1, 2, 2, 3, 5, 6]
+# ---------------------------
+# 14. Practical examples
+# ---------------------------
 
-# Practical Examples
-# Example 1: Processing CSV-like data
 def process_data(data):
     """
-    Process list of lists as CSV data
+    Convert CSV-like list of rows into list of dicts keyed by header row.
+    Returns [] if data empty or only header.
     """
     if not data:
-        return {}
-    
+        return []
     headers = data[0]
     rows = data[1:]
-    
     result = []
     for row in rows:
+        # zip stops at shortest; we deliberately allow missing columns to be ignored
         row_dict = dict(zip(headers, row))
         result.append(row_dict)
-    
     return result
 
-# Test
-data = [
-    ['Name', 'Age', 'City'],
-    ['Alice', '30', 'New York'],
-    ['Bob', '25', 'London']
-]
-print(process_data(data))
-
-# Example 2: Matrix operations
 def transpose_matrix(matrix):
-    """
-    Transpose a matrix (list of lists)
-    """
-    return [[matrix[j][i] for j in range(len(matrix))]
-            for i in range(len(matrix[0]))]
+    # Validate matrix non-empty and rectangular
+    if not matrix:
+        return []
+    row_len = len(matrix[0])
+    if any(len(row) != row_len for row in matrix):
+        raise ValueError("All rows must have the same length")
+    return [[matrix[j][i] for j in range(len(matrix))] for i in range(row_len)]
 
-matrix = [[1, 2, 3], [4, 5, 6]]
-print(transpose_matrix(matrix))  # [[1, 4], [2, 5], [3, 6]]
-
-# Example 3: Group similar items
 def group_by_key(items, key_func):
-    """
-    Group items by computed key
-    """
     groups = {}
     for item in items:
         key = key_func(item)
-        if key not in groups:
-            groups[key] = []
-        groups[key].append(item)
+        groups.setdefault(key, []).append(item)
     return groups
 
-people = [
-    {'name': 'Alice', 'age': 30},
-    {'name': 'Bob', 'age': 25},
-    {'name': 'Charlie', 'age': 30}
-]
-grouped = group_by_key(people, lambda x: x['age'])
-print(grouped)  # {30: [{'name': 'Alice', 'age': 30}, {'name': 'Charlie', 'age': 30}], 25: [{'name': 'Bob', 'age': 25}]}
+# ---------------------------
+# 15. Conditional statements and many cases (examples)
+# ---------------------------
+
+# Basic if/elif/else
+def classify_number(x):
+    # Demonstrates comparisons and chained comparisons
+    if x is None:                       # identity operator: check for None
+        return "no value"
+    if x < 0:
+        return "negative"
+    elif x == 0:
+        return "zero"
+    elif 0 < x < 1:                     # chained comparison
+        return "fraction"
+    elif x >= 1 and x < 10:             # logical and
+        return "small"
+    else:
+        return "large"
+
+# Ternary conditional expression
+def sign(x):
+    return "positive" if x > 0 else ("zero" if x == 0 else "negative")
+
+# Truthiness examples
+def truthiness_examples(value):
+    # Demonstrates how different values evaluate in boolean context
+    if value:                # truthy values (non-empty, non-zero)
+        return "truthy"
+    else:
+        return "falsy"
+
+# Membership and identity together
+def membership_and_identity(x, container):
+    # 'in' checks membership; 'is' checks identity
+    return (x in container), (x is container)
+
+# Short-circuit evaluation
+def short_circuit(a, b):
+    # a and b are callables to demonstrate short-circuiting
+    # logical AND: if first is falsy, second not evaluated
+    if a() and b():
+        return True
+    return False
+
+# Nested conditionals: more complex real-world flow
+def access_control(user):
+    """
+    Example of nested and combined conditionals to decide access level.
+    user is expected to be a dict with keys: 'active', 'role', 'age', 'groups'
+    """
+    if not user or not isinstance(user, dict):           # guard clause
+        return "no access"
+
+    if not user.get('active', False):                    # check boolean flag
+        return "inactive user"
+
+    role = user.get('role', 'guest')
+    age = user.get('age', 0)
+    groups = user.get('groups', [])
+
+    # nested ifs with combined conditions
+    if role == 'admin':
+        # admins with age check (compound condition)
+        if age >= 18:
+            return "full admin access"
+        else:
+            return "limited admin access"
+
+    elif role == 'editor':
+        # editors need to be in 'editors' group or be older than 21
+        if 'editors' in groups or age > 21:
+            return "editor access"
+        else:
+            return "no editor privileges"
+
+    elif role == 'user':
+        # regular users: nested permission checks
+        if 'beta' in groups:
+            return "beta user"
+        elif age >= 13:
+            return "standard user"
+        else:
+            return "child account"
+
+    else:
+        # guest or unknown roles: ternary inside return
+        return "guest" if 'public' in groups else "no access"
+
+# Chained comparisons and bitwise operator example
+def compare_and_bitwise(a, b):
+    # demonstrates comparison operators and bitwise AND/OR
+    is_a_gt_b = a > b
+    in_range = 0 <= a <= 100              # chained
+    bitwise_and = a & b                   # bitwise AND (integers)
+    bitwise_or = a | b                    # bitwise OR
+    return is_a_gt_b, in_range, bitwise_and, bitwise_or
+
+# Demonstrate assignment operators and augmented assignment
+def assignment_examples():
+    x = 10               # simple assignment
+    x += 5               # augmented: same as x = x + 5
+    x *= 2               # x = x * 2
+    x //= 3              # integer floor-division and assign
+    x ^= 3               # bitwise XOR and assign
+    return x
+
+# try/except with conditional inside
+def safe_divide(a, b):
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return math.inf   # return infinity when dividing by zero
+    except TypeError:
+        return None       # return None if wrong types passed
+
+# ---------------------------
+# 16. Operators in real-life code examples (list)
+# ---------------------------
+# Arithmetic: +, -, *, /, //, %, **
+# Comparison: ==, !=, <, <=, >, >=
+# Logical: and, or, not
+# Membership: in, not in
+# Identity: is, is not
+# Bitwise: &, |, ^, ~, <<, >>
+# Assignment (incl augmented): =, +=, -=, *=, /=, //=, %=, **=, &=, |=, ^=
+
+# Example function that uses many operator types together
+def financial_rounding(balance, rate_percent, years):
+    """
+    Example using arithmetic, comparison, logical, and bitwise in a realistic formula.
+    R = final value after compound interest, but we ensure inputs valid.
+    """
+    if balance is None or rate_percent is None or years is None:
+        return None
+    if balance < 0 or years < 0:
+        return None
+
+    # arithmetic and power operator
+    rate = rate_percent / 100.0
+    final = balance * ((1 + rate) ** years)
+
+    # comparison
+    if final >= 1_000_000:   # underscore allowed in numeric literals for readability
+        status = "millionaire"
+    elif final >= 100_000:
+        status = "rich"
+    else:
+        status = "normal"
+
+    # bitwise used for a toy condition (not common in finance) to show operator usage
+    flag = (int(years) & 1)  # 1 if years odd, 0 if even
+    return final, status, bool(flag)
+
+# ---------------------------
+# 17. Tests / demonstrations (simple)
+# ---------------------------
+
+if __name__ == "__main__":
+    # quick functional tests to ensure basic operations run
+    print("two_sum:", two_sum([2, 7, 11, 15], 9))
+    print("missing:", find_missing_number([3, 0, 1]))
+    print("rotate:", rotate_array([1, 2, 3, 4, 5], 2))
+    print("merge:", merge_sorted_arrays([1, 2, 3, 0, 0, 0], 3, [2, 5, 6], 3))
+    print("transpose:", transpose_matrix([[1,2,3],[4,5,6]]))
+    print("access:", access_control({'active': True, 'role': 'user', 'age': 14, 'groups': []}))
+    print("financial:", financial_rounding(50000, 5, 10))
 
 
 
+
+
+
+    
 # Summary:
 #   -> Mastering lists in Python is crucial for coding interviews and everyday programming. Key concepts to remember:
 #   -> Time Complexity: Understanding Big O for each operation

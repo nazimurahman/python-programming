@@ -1,309 +1,326 @@
-# Arithmetic Operators used for mathematical calculations
+# ---------- Arithmetic Operators ----------
+a = 10           # integer
+b = 3            # integer
 
-# Arithmetic Operators in Python
-a = 10
-b = 3
+# Addition: adds two numbers
+sum_result = a + b               # 10 + 3 = 13
+print("Addition:", sum_result)
 
-# Addition (+)
-sum_result = a + b  # Adds two numbers: 10 + 3 = 13
-print(f"Addition: {sum_result}")
+# Subtraction: subtracts second from first
+diff_result = a - b              # 10 - 3 = 7
+print("Subtraction:", diff_result)
 
-# Subtraction (-)
-diff_result = a - b  # Subtracts second from first: 10 - 3 = 7
-print(f"Subtraction: {diff_result}")
+# Multiplication: multiplies two numbers
+mul_result = a * b               # 10 * 3 = 30
+print("Multiplication:", mul_result)
 
-# Multiplication (*)
-mul_result = a * b  # Multiplies two numbers: 10 * 3 = 30
-print(f"Multiplication: {mul_result}")
+# Division: always returns float (even if evenly divisible)
+div_result = a / b               # 10 / 3 = 3.3333333333333335
+print("Division:", div_result)
 
-# Division (/)
-div_result = a / b  # Returns float result: 10 / 3 = 3.333...
-print(f"Division: {div_result}")
+# Floor division: integer division (floor for positives)
+floor_result = a // b            # 10 // 3 = 3
+print("Floor Division:", floor_result)
 
-# Floor Division (//)
-floor_result = a // b  # Returns integer division: 10 // 3 = 3
-print(f"Floor Division: {floor_result}")
+# Modulus: remainder of division
+mod_result = a % b               # 10 % 3 = 1
+print("Modulus:", mod_result)
 
-# Modulus (%)
-mod_result = a % b  # Returns remainder: 10 % 3 = 1
-print(f"Modulus: {mod_result}")
+# Exponentiation: power
+exp_result = a ** b              # 10 ** 3 = 1000
+print("Exponentiation:", exp_result)
 
-# Exponentiation (**)
-exp_result = a ** b  # Raises to power: 10^3 = 1000
-print(f"Exponentiation: {exp_result}")
+# Unary plus/minus: show sign operation
+pos = +a                         # +10 = 10
+neg = -b                         # -3 = -3
+print("Unary +:", pos, "Unary -:", neg)
 
-# Comparison (Relational) Operators used to compare values and return boolean results.
+# Real-life arithmetic example: splitting bill
+total_bill = 250.75
+people = 4
+per_person = total_bill / people  # division to split cost
+print("Per person bill:", per_person)
 
-# Comparison Operators
+# ---------- Comparison (Relational) Operators ----------
 x = 5
 y = 10
 
-# Equal to (==)
-is_equal = x == y  # Checks if values are equal: False
-print(f"Equal: {is_equal}")
+# Equal: checks value equality
+is_equal = (x == y)              # False
+print("Equal:", is_equal)
 
-# Not equal to (!=)
-is_not_equal = x != y  # Checks if values are not equal: True
-print(f"Not equal: {is_not_equal}")
+# Not equal: checks inequality
+is_not_equal = (x != y)          # True
+print("Not equal:", is_not_equal)
 
-# Greater than (>)
-is_greater = x > y  # Checks if left is greater than right: False
-print(f"Greater than: {is_greater}")
+# Greater than
+is_greater = (x > y)             # False
+print("Greater than:", is_greater)
 
-# Less than (<)
-is_less = x < y  # Checks if left is less than right: True
-print(f"Less than: {is_less}")
+# Less than
+is_less = (x < y)                # True
+print("Less than:", is_less)
 
-# Greater than or equal to (>=)
-is_greater_equal = x >= y  # Checks if left >= right: False
-print(f"Greater or equal: {is_greater_equal}")
+# Greater than or equal
+is_greater_equal = (x >= y)      # False
+print("Greater or equal:", is_greater_equal)
 
-# Less than or equal to (<=)
-is_less_equal = x <= y  # Checks if left <= right: True
-print(f"Less or equal: {is_less_equal}")
+# Less than or equal
+is_less_equal = (x <= y)         # True
+print("Less or equal:", is_less_equal)
 
+# Chained comparisons: readable multi-part comparison
+num = 7
+in_range = 1 < num <= 10         # True, equivalent to (1 < num) and (num <= 10)
+print("Chained comparison (1 < num <= 10):", in_range)
 
-# Logical Operators used to combine conditional statements.
+# Real-life comparison example: eligibility
+age = 18
+can_vote = age >= 18             # True if age is at least 18
+print("Can vote:", can_vote)
 
-# Logical Operators
+# ---------- Logical Operators ----------
 is_raining = True
 has_umbrella = False
 
-# AND (and) - Both conditions must be True
-go_outside = not is_raining and has_umbrella  # False AND False = False
-print(f"AND operator: {go_outside}")
+# and: True only if both operands are True
+go_outside = (not is_raining) and has_umbrella   # (False) and False -> False
+print("AND operator (go_outside):", go_outside)
 
-# OR (or) - At least one condition must be True
-stay_dry = is_raining or has_umbrella  # True OR False = True
-print(f"OR operator: {stay_dry}")
+# or: True if at least one operand is True
+stay_dry = is_raining or has_umbrella           # True or False -> True
+print("OR operator (stay_dry):", stay_dry)
 
-# NOT (not) - Reverses the boolean value
-should_stay_home = not is_raining  # NOT True = False
-print(f"NOT operator: {should_stay_home}")
+# not: negates boolean
+should_stay_home = not is_raining               # not True -> False
+print("NOT operator (should_stay_home):", should_stay_home)
 
-# Complex example
+# Combining logicals: nested conditions (real-life driving example)
 age = 25
 has_license = True
-can_drive = age >= 18 and has_license  # True AND True = True
-print(f"Can drive: {can_drive}")
+is_sober = True
+can_drive = (age >= 18) and has_license and is_sober  # True if all three True
+print("Can drive:", can_drive)
 
+# Short-circuit behavior demonstration
+def expensive_check():
+    print("expensive_check called")
+    return True
 
-# Assignment Operators used to assign values to variables.
+# 'and' short-circuits on first False, 'or' short-circuits on first True
+print("Short-circuit and:", False and expensive_check())  # expensive_check not called
+print("Short-circuit or:", True or expensive_check())     # expensive_check not called
 
-# Assignment Operators
-num = 10  # Simple assignment
-print(f"Initial: {num}")
+# ---------- Assignment Operators ----------
+num = 10
+print("Initial:", num)        # 10
 
-# Addition assignment (+=)
-num += 5  # Equivalent to: num = num + 5
-print(f"After +=: {num}")  # Output: 15
+# +=
+num += 5                      # num = num + 5 -> 15
+print("After +=:", num)       # 15
 
-# Subtraction assignment (-=)
-num -= 3  # Equivalent to: num = num - 3
-print(f"After -=: {num}")  # Output: 12
+# -=
+num -= 3                      # num = num - 3 -> 12
+print("After -=:", num)       # 12
 
-# Multiplication assignment (*=)
-num *= 2  # Equivalent to: num = num * 2
-print(f"After *=: {num}")  # Output: 24
+# *=
+num *= 2                      # num = num * 2 -> 24
+print("After *=:", num)       # 24
 
-# Division assignment (/=)
-num /= 4  # Equivalent to: num = num / 4
-print(f"After /=: {num}")  # Output: 6.0
+# /= results in float
+num /= 4                      # num = num / 4 -> 6.0
+print("After /=:", num)       # 6.0
 
-# Floor division assignment (//=)
-num //= 2  # Equivalent to: num = num // 2
-print(f"After //=: {num}")  # Output: 3.0
+# Convert to int for floor assignment demonstration
+num = int(num)                # 6
+num //= 2                     # num = num // 2 -> 3
+print("After //=:", num)      # 3
 
-# Modulus assignment (%=)
-num %= 3  # Equivalent to: num = num % 3
-print(f"After %=: {num}")  # Output: 0.0
+# %= modulus assignment
+num %= 3                      # num = num % 3 -> 0
+print("After %=: ", num)      # 0
 
-# Bitwise Operators work on bits and perform bit-level operations.
+# Real-life use: incrementing counters
+visitors = 0
+visitors += 1                 # new visitor arrives
+print("Visitors:", visitors)
 
-# Bitwise Operators
-a = 5  # Binary: 0101
-b = 3  # Binary: 0011
+# ---------- Bitwise Operators ----------
+a = 5   # binary 0b0101
+b = 3   # binary 0b0011
 
-# AND (&) - Sets each bit to 1 if both bits are 1
-bitwise_and = a & b  # 0101 & 0011 = 0001 (1)
-print(f"Bitwise AND: {bitwise_and}")
+# &: bitwise and
+bitwise_and = a & b           # 0b0101 & 0b0011 = 0b0001 -> 1
+print("Bitwise AND:", bitwise_and)
 
-# OR (|) - Sets each bit to 1 if at least one bit is 1
-bitwise_or = a | b  # 0101 | 0011 = 0111 (7)
-print(f"Bitwise OR: {bitwise_or}")
+# |: bitwise or
+bitwise_or = a | b            # 0b0101 | 0b0011 = 0b0111 -> 7
+print("Bitwise OR:", bitwise_or)
 
-# XOR (^) - Sets each bit to 1 if only one bit is 1
-bitwise_xor = a ^ b  # 0101 ^ 0011 = 0110 (6)
-print(f"Bitwise XOR: {bitwise_xor}")
+# ^: bitwise xor
+bitwise_xor = a ^ b           # 0b0101 ^ 0b0011 = 0b0110 -> 6
+print("Bitwise XOR:", bitwise_xor)
 
-# NOT (~) - Inverts all bits
-bitwise_not = ~a  # ~0101 = 1010 (-6 in 2's complement)
-print(f"Bitwise NOT: {bitwise_not}")
+# ~: bitwise not (two's complement)
+bitwise_not = ~a              # ~5 -> -6 (because of two's complement)
+print("Bitwise NOT:", bitwise_not)
 
-# Left Shift (<<) - Shifts bits left, fills with 0
-left_shift = a << 1  # 0101 << 1 = 1010 (10)
-print(f"Left Shift: {left_shift}")
+# <<: left shift (multiply by powers of two)
+left_shift = a << 1           # 0b0101 << 1 = 0b1010 -> 10
+print("Left Shift:", left_shift)
 
-# Right Shift (>>) - Shifts bits right, drops bits
-right_shift = a >> 1  # 0101 >> 1 = 0010 (2)
-print(f"Right Shift: {right_shift}")
+# >>: right shift (integer division by powers of two)
+right_shift = a >> 1          # 0b0101 >> 1 = 0b0010 -> 2
+print("Right Shift:", right_shift)
 
+# Real-life bitwise example: using bit flags
+READ = 0b100   # 4
+WRITE = 0b010  # 2
+EXEC = 0b001   # 1
+perms = READ | EXEC            # give read and exec permissions -> 0b101 (5)
+print("Permissions value:", perms)
+has_write = bool(perms & WRITE)  # check write permission -> False
+print("Has write permission:", has_write)
 
-
-#  Identity Operators check if two variables point to the same object.
-
-# Identity Operators
+# ---------- Identity Operators ----------
 list1 = [1, 2, 3]
-list2 = [1, 2, 3]
-list3 = list1  # list3 references the same object as list1
+list2 = [1, 2, 3]   # distinct object with same content
+list3 = list1       # reference to same object as list1
 
-# is - True if both variables refer to same object
-is_same = list1 is list3  # True - same object
-print(f"is operator: {is_same}")
+# is: True if same object (same identity)
+is_same = (list1 is list3)
+print("is operator (same obj):", is_same)
 
-is_different = list1 is list2  # False - different objects with same content
-print(f"is operator (different objects): {is_different}")
+# is with different object but same content -> False
+is_different = (list1 is list2)
+print("is operator (different objs):", is_different)
 
-# is not - True if variables refer to different objects
-is_not_same = list1 is not list2  # True - different objects
-print(f"is not operator: {is_not_same}")
+# is not: True if different objects
+is_not_same = (list1 is not list2)
+print("is not operator (list1 is not list2):", is_not_same)
 
-# Comparing with None
+# Comparing with None: use 'is' for identity
 value = None
-is_none = value is None  # True - checking for None
-print(f"Check None: {is_none}")
+is_none = (value is None)
+print("Check None:", is_none)
 
-
-#  Membership Operators test if a value is present in a sequence
-
-# Membership Operators
+# ---------- Membership Operators ----------
 fruits = ['apple', 'banana', 'orange', 'grape']
 text = "Hello World"
 
-# in - True if value exists in sequence
-has_apple = 'apple' in fruits  # True
-print(f"'apple' in fruits: {has_apple}")
+# in: membership in sequence
+has_apple = 'apple' in fruits
+print("'apple' in fruits:", has_apple)
 
-has_pear = 'pear' in fruits  # False
-print(f"'pear' in fruits: {has_pear}")
+has_pear = 'pear' in fruits
+print("'pear' in fruits:", has_pear)
 
-# in with strings
-has_hello = 'Hello' in text  # True
-print(f"'Hello' in text: {has_hello}")
+# membership in string
+has_hello = 'Hello' in text
+print("'Hello' in text:", has_hello)
 
-# not in - True if value does NOT exist in sequence
-not_in_list = 'mango' not in fruits  # True
-print(f"'mango' not in fruits: {not_in_list}")
+# not in: testing absence
+not_in_list = 'mango' not in fruits
+print("'mango' not in fruits:", not_in_list)
 
-# With dictionaries (checks keys)
+# dictionaries: 'in' checks keys by default
 person = {'name': 'John', 'age': 30, 'city': 'NYC'}
-has_name_key = 'name' in person  # True - checks keys
-print(f"'name' in person: {has_name_key}")
+has_name_key = 'name' in person           # True
+print("'name' in person:", has_name_key)
+has_john_value = 'John' in person.values()  # True
+print("'John' in person.values():", has_john_value)
 
-has_john_value = 'John' in person.values()  # True - checks values
-print(f"'John' in person.values(): {has_john_value}")
-
-
-# Ternary/Conditional Operator short-hand for if-else statements.
-
-# Ternary Operator in Python
+# ---------- Ternary (Conditional) Operator ----------
 age = 18
+status = "Adult" if age >= 18 else "Minor"  # short if-else expression
+print("Status:", status)
 
-# Syntax: value_if_true if condition else value_if_false
-status = "Adult" if age >= 18 else "Minor"
-print(f"Status: {status}")  # Output: Adult
-
-# Nested ternary
+# nested ternary (avoid for complex logic; prefer if-elif-else)
 score = 85
 grade = "A" if score >= 90 else "B" if score >= 80 else "C" if score >= 70 else "D"
-print(f"Grade: {grade}")  # Output: B
+print("Grade:", grade)
 
-# Practical example
+# Real-life example: greeting by login state
 is_logged_in = True
 message = "Welcome back!" if is_logged_in else "Please login"
-print(f"Message: {message}")
+print("Message:", message)
 
-
-
-#Operator Precedence understanding the order in which operators are evaluated.
-
-
-# Operator Precedence Example
+# ---------- Operator Precedence ----------
 result = 10 + 5 * 2 - 3 ** 2 / 2
-# Step by step evaluation:
-# 1. 3 ** 2 = 9 (Exponentiation)
-# 2. 5 * 2 = 10 (Multiplication)
-# 3. 9 / 2 = 4.5 (Division)
-# 4. 10 + 10 = 20 (Addition)
-# 5. 20 - 4.5 = 15.5 (Subtraction)
+# evaluation order: **, *, /, +, -
+print("Result with normal precedence:", result)
 
-print(f"Result with normal precedence: {result}")
-
-# Using parentheses to change precedence
+# use parentheses to override precedence
 result_with_parentheses = (10 + 5) * 2 - (3 ** 2 / 2)
-# Step by step:
-# 1. (10 + 5) = 15
-# 2. (3 ** 2 / 2) = 4.5
-# 3. 15 * 2 = 30
-# 4. 30 - 4.5 = 25.5
-print(f"Result with parentheses: {result_with_parentheses}")
+print("Result with parentheses:", result_with_parentheses)
 
-# Precedence from highest to lowest:
-print("\nOperator Precedence (highest to lowest):")
-print("1. () - Parentheses")
-print("2. ** - Exponentiation")
-print("3. *, /, //, % - Multiplication/Division")
-print("4. +, - - Addition/Subtraction")
-print("5. <<, >> - Bitwise shifts")
-print("6. & - Bitwise AND")
-print("7. ^ - Bitwise XOR")
-print("8. | - Bitwise OR")
-print("9. <, <=, >, >=, !=, == - Comparisons")
-print("10. not - Logical NOT")
-print("11. and - Logical AND")
-print("12. or - Logical OR")
+# show precedence list in brief
+precedence_list = [
+    "()", "**", "*, /, //, %", "+, -",
+    "<<, >>", "&", "^", "|",
+    "<, <=, >, >=, !=, ==", "not", "and", "or"
+]
+print("Operator precedence (highest->lowest):", precedence_list)
 
-
-
-# Practical Example - Combining Operators
-
-
-# Complete practical example
-def calculate_bonus(salary, years_experience, performance_rating):
+# ---------- Comprehensive Conditional Examples ----------
+def calculate_bonus(salary, years_experience, performance_rating, remote=False):
     """
-    Calculate employee bonus based on multiple factors
+    Calculate employee bonus based on multiple factors:
+    - qualifies if years_experience >= 3 and performance_rating >= 7
+    - base bonus = 10% of salary
+    - extra: 50% extra if rating >=9, 25% if rating >=8
+    - remote employees receive 5% reduction in bonus (example business rule)
     """
-    # Check if employee qualifies for bonus
+    # qualification check (comparison + logical)
     qualifies = (years_experience >= 3) and (performance_rating >= 7)
-    
-    if qualifies:
-        # Calculate base bonus
-        base_bonus = salary * 0.10  # 10% of salary
-        
-        # Additional bonus based on performance
-        if performance_rating >= 9:
-            extra_bonus = base_bonus * 0.50  # 50% extra for excellent
-        elif performance_rating >= 8:
-            extra_bonus = base_bonus * 0.25  # 25% extra for very good
-        else:
-            extra_bonus = 0
-            
-        total_bonus = base_bonus + extra_bonus
+
+    if not qualifies:
+        # employee does not qualify
+        return 0.0
+
+    # base bonus (arithmetic)
+    base_bonus = salary * 0.10
+
+    # nested conditional for extra bonus
+    if performance_rating >= 9:
+        extra_bonus = base_bonus * 0.50
+    elif performance_rating >= 8:
+        extra_bonus = base_bonus * 0.25
     else:
-        total_bonus = 0
-    
-    return total_bonus
+        extra_bonus = 0.0
 
-# Test the function
-employee_salary = 50000
-experience = 5
-rating = 8
+    # apply remote reduction using ternary operator
+    reduction = 0.05 if remote else 0.0
+    total_bonus = (base_bonus + extra_bonus) * (1 - reduction)
 
-bonus = calculate_bonus(employee_salary, experience, rating)
-print(f"Employee Bonus: ${bonus:,.2f}")
+    # ensure non-negative and return float
+    return float(max(total_bonus, 0.0))
 
-# Using multiple operators in one line
+# test cases for calculate_bonus covering multiple branches
+employees = [
+    {"salary": 50000, "years": 5, "rating": 8, "remote": False},  # qualifies, extra 25%
+    {"salary": 40000, "years": 2, "rating": 9, "remote": False},  # not qualify (experience)
+    {"salary": 60000, "years": 10, "rating": 9, "remote": True},  # qualifies, extra 50%, remote reduction
+    {"salary": 30000, "years": 4, "rating": 7, "remote": False},  # qualifies, no extra
+]
+
+for e in employees:
+    bonus = calculate_bonus(e["salary"], e["years"], e["rating"], e["remote"])
+    print(f"Employee (salary={e['salary']}, years={e['years']}, rating={e['rating']}, remote={e['remote']}) -> Bonus: ${bonus:,.2f}")
+
+# ---------- Multiple operators in one expression ----------
 age = 25
 salary = 60000
 employee_status = "Senior" if (age >= 30 and salary > 50000) else "Junior"
-print(f"Employee Status: {employee_status}")
+print("Employee Status:", employee_status)
+
+# ---------- Edge cases and safety ----------
+# Avoid dividing by zero: check before division
+def safe_divide(x, y):
+    return x / y if y != 0 else float('inf')   # return infinity for division-by-zero case
+
+print("Safe divide 10/0:", safe_divide(10, 0))
+
+# Use 'is' for None checks and '==' for value equality:
+a = None
+print("a is None:", a is None)

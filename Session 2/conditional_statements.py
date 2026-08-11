@@ -1,165 +1,224 @@
-# Basic if Statement -> executes code block only when condition is True.
+# CONDITIONAL STATEMENTS AND TYPE VALIDATION IN PYTHON
 
-# Basic if statement
-temperature = 25
+# ----------Basic if statement------------------
 
-# Simple if - checks if temperature is above comfort level
+temperature = 25  # Store the temperature as an integer.
+
+# The condition is checked.
+# The block executes only when temperature is greater than 20.
 if temperature > 20:
-    print("It's warm outside!")  # This will execute because 25 > 20
-    print("You can wear light clothes.")  # Multiple statements can be in if block
+    print("It's warm outside!")  # Runs because 25 > 20.
+    print("You can wear light clothes.")  # Another statement in the if block.
 
-# if with comparison
-score = 85
+
+# ---------if with comparison---------------
+
+score = 85  # Store a student's score.
+
+# >= means "greater than or equal to".
 if score >= 60:
-    print(f"Score {score} is passing!")  # Will execute
+    print(f"Score {score} is passing!")  # f-string inserts the score value.
 
-# if with variable
-is_weekend = True
+
+# ---------if with Boolean variable--------------------
+
+is_weekend = True  # Boolean value: True or False.
+
+# This condition runs because is_weekend is True.
 if is_weekend:
-    print("Time to relax!")  # Executes when True
+    print("Time to relax!")
 
 
+# --------if-else statement------------------
+
+age = 17  # Store the user's age.
+
+if age >= 18:  # Check whether the user is at least 18.
+    print("You are eligible to vote.")
+else:  # Runs when the if condition is False.
+    print("You are too young to vote.")
+    print(f"Wait {18 - age} more years.")  # Calculate remaining years.
 
 
-# if-else Statement -> executes one block when condition is True, another when False.
+# ---------Practical balance example------------------
 
-# Basic if-else
-age = 17
-
-if age >= 18:
-    print("You are eligible to vote.")  # This block executes if True
-else:
-    print("You are too young to vote.")  # This executes if False
-    print(f"Wait {18 - age} more years.")  # Can have multiple statements
-
-# Practical example with user input
-user_balance = 100
-purchase_amount = 150
+user_balance = 100  # Available money.
+purchase_amount = 150  # Required money.
 
 if purchase_amount <= user_balance:
     print("Purchase approved!")
+
     user_balance -= purchase_amount
-    print(f"Remaining balance: ${user_balance}")
+    # The statement above is equivalent to:
+    # user_balance = user_balance - purchase_amount
+
+    print(f"Remaining balance: ${user_balance:.2f}")
 else:
     print("Insufficient funds!")
-    print(f"Need ${purchase_amount - user_balance} more.")
+
+    required_amount = purchase_amount - user_balance
+    print(f"Need ${required_amount:.2f} more.")
 
 
+# ------------if-elif-else statement-----------------
 
-# if-elif-else Statement: -> Handles multiple conditions in sequence.
+def get_grade(score):
+    """Return a letter grade and message after validating the score."""
 
-# if-elif-else structure
-grade = 85
+    # Reject Boolean values because bool is technically a subclass of int.
+    if isinstance(score, bool) or not isinstance(score, (int, float)):
+        raise TypeError("Score must be an integer or float.")
 
-# Check multiple grade ranges
-if grade >= 90:
-    letter_grade = "A"
-    message = "Excellent performance!"
-elif grade >= 80:
-    letter_grade = "B"
-    message = "Good job!"
-elif grade >= 70:
-    letter_grade = "C"
-    message = "Satisfactory"
-elif grade >= 60:
-    letter_grade = "D"
-    message = "Need improvement"
-else:
-    letter_grade = "F"
-    message = "Failing"
+    # Scores must be within the valid range.
+    if not 0 <= score <= 100:
+        raise ValueError("Score must be between 0 and 100.")
 
+    # Only one branch executes because these conditions are mutually exclusive.
+    if score >= 90:
+        return "A", "Excellent performance!"
+    elif score >= 80:
+        return "B", "Good job!"
+    elif score >= 70:
+        return "C", "Satisfactory"
+    elif score >= 60:
+        return "D", "Needs improvement"
+    else:
+        return "F", "Failing"
+
+
+letter_grade, message = get_grade(85)
 print(f"Grade: {letter_grade} - {message}")
 
-# Another example - ticket pricing
-age = 25
 
-if age < 5:
-    ticket_price = 0  # Free for toddlers
-elif age < 12:
-    ticket_price = 8  # Child price
-elif age < 18:
-    ticket_price = 12  # Student price
-elif age < 60:
-    ticket_price = 15  # Adult price
-else:
-    ticket_price = 10  # Senior discount
+# ------------Ticket pricing------------------
 
+def calculate_ticket_price(age):
+    """Calculate a ticket price according to age."""
+
+    if isinstance(age, bool) or not isinstance(age, int):
+        raise TypeError("Age must be an integer.")
+
+    if age < 0:
+        raise ValueError("Age cannot be negative.")
+
+    if age < 5:
+        return 0
+    elif age < 12:
+        return 8
+    elif age < 18:
+        return 12
+    elif age < 60:
+        return 15
+    else:
+        return 10
+
+
+ticket_price = calculate_ticket_price(25)
 print(f"Ticket price: ${ticket_price}")
 
 
+# ------------Nested if statements-----------------
 
-# Nested if-else Statements: -> if statements inside other if statements.
+def check_access(is_logged_in, user_role, has_permission):
+    """Check access using nested conditional statements."""
 
-# Nested if-else example
-is_logged_in = True
-user_role = "admin"
-has_permission = True
+    # The outer condition checks whether the user is logged in.
+    if is_logged_in:
+        print("User is logged in.")
 
-# Outer if checks login status
-if is_logged_in:
-    print("User is logged in")
-    
-    # Inner if checks role
-    if user_role == "admin":
-        print("Admin access granted")
-        
-        # Even deeper nesting for permissions
-        if has_permission:
-            print("Full system access available")
-            print("Can modify all settings")
+        # The inner condition checks the user's role.
+        if user_role == "admin":
+            print("Admin access granted.")
+
+            # A deeper condition checks permission.
+            if has_permission:
+                print("Full system access available.")
+                print("Can modify all settings.")
+            else:
+                print("Admin but limited permissions.")
+
+        elif user_role == "manager":
+            print("Manager access granted.")
         else:
-            print("Admin but limited permissions")
-    elif user_role == "manager":
-        print("Manager access granted")
+            print("Basic user access granted.")
     else:
-        print("User access granted")
-else:
-    print("Please log in first")
+        print("Please log in first.")
 
-# Nested if in practical scenario
+
+check_access(True, "admin", True)
+
+
+# -----------Nested practical order example------------------
+
 def process_order(order_total, is_member, shipping_method):
-    """Process order with multiple conditions"""
-    
-    # Check for minimum order
-    if order_total > 0:
-        print(f"Processing ${order_total} order")
-        
-        # Check membership status
-        if is_member:
-            print("Member discount applied")
-            discount = order_total * 0.1
-            print(f"Discount: ${discount:.2f}")
-            order_total -= discount
-        
-        # Check shipping method
-        if shipping_method == "express":
-            print("Express shipping selected")
-            shipping_cost = 15
-            if order_total > 100:
-                shipping_cost = 0  # Free express for orders over $100
-                print("Free express shipping applied")
-        else:
-            print("Standard shipping")
-            shipping_cost = 5
-            if is_member:
-                shipping_cost = 0  # Free shipping for members
-                print("Free shipping for members")
-        
-        final_total = order_total + shipping_cost
-        print(f"Final total: ${final_total:.2f}")
-    else:
-        print("Invalid order amount")
+    """Process an order using validation and nested conditions."""
 
-# Test the nested if function
+    # Validate the order amount.
+    if isinstance(order_total, bool) or not isinstance(
+        order_total, (int, float)
+    ):
+        raise TypeError("Order total must be an integer or float.")
+
+    if order_total <= 0:
+        print("Invalid order amount.")
+        return None
+
+    # Validate the membership value.
+    if not isinstance(is_member, bool):
+        raise TypeError("is_member must be True or False.")
+
+    # Validate the shipping method.
+    valid_shipping_methods = {"standard", "express"}
+
+    if shipping_method not in valid_shipping_methods:
+        raise ValueError("Shipping method must be 'standard' or 'express'.")
+
+    print(f"Processing ${order_total:.2f} order.")
+
+    # Apply membership discount.
+    if is_member:
+        print("Member discount applied.")
+
+        discount = order_total * 0.10
+        print(f"Discount: ${discount:.2f}")
+
+        order_total -= discount
+
+    # Select shipping cost.
+    if shipping_method == "express":
+        print("Express shipping selected.")
+
+        shipping_cost = 15
+
+        # Nested condition for free express shipping.
+        if order_total > 100:
+            shipping_cost = 0
+            print("Free express shipping applied.")
+
+    else:
+        print("Standard shipping.")
+
+        shipping_cost = 5
+
+        # Members get free standard shipping.
+        if is_member:
+            shipping_cost = 0
+            print("Free shipping for members.")
+
+    final_total = order_total + shipping_cost
+    print(f"Final total: ${final_total:.2f}")
+
+    return final_total
+
+
 process_order(150, True, "express")
 
 
-
-# Special Case: elif vs Nested if -> Understanding when to use each.
-# Using elif (mutually exclusive conditions)
+# ------------elif versus separate if---------------
 
 score = 75
 
+# elif is appropriate because only one grade should be selected.
 if score >= 90:
     grade = "A"
 elif score >= 80:
@@ -170,379 +229,466 @@ elif score >= 60:
     grade = "D"
 else:
     grade = "F"
-print(f"Grade: {grade}")  # Only C executes
 
-# Using separate if statements (multiple blocks can execute)
+print(f"Grade: {grade}")
+
 
 grade = "B"
 bonus = 0
 
+# Separate if statements are useful when conditions are independent.
 if grade == "A":
     bonus += 100
+
 if grade == "B":
     bonus += 50
+
 if grade == "C":
     bonus += 25
+
 if grade == "D":
     bonus += 0
 
-print(f"Bonus: {bonus}")  # Both B and C conditions checked, only B applies
-
-# When to use each:
-# Use elif when:
-#  ->  Conditions are mutually exclusive
-#  ->  Only one condition should execute
-#  ->  You want to stop checking after a match
-
-# Use nested if when:
-#  ->  Conditions are dependent on each other
-#  ->  Need to check multiple layers of conditions
-#  ->  Have complex business logic
+print(f"Bonus: {bonus}")
 
 
-# Conditional Expressions (Ternary Operator) -> Single-line if-else statements.
+# ------------Conditional expression-----------------
 
-# Basic ternary operator
 age = 20
+
+# Syntax:
+# value_if_true if condition else value_if_false
 status = "Adult" if age >= 18 else "Minor"
+
 print(f"Status: {status}")
 
-# Nested ternary (use sparingly)
+
 temperature = 25
-weather = "Hot" if temperature > 30 else "Warm" if temperature > 20 else "Cool"
+
+# Nested conditional expressions should be used sparingly.
+if temperature > 30:
+    weather = "Hot"
+elif temperature > 20:
+    weather = "Warm"
+else:
+    weather = "Cool"
+
 print(f"Weather: {weather}")
 
-# Ternary with multiple conditions
+
 is_member = True
 is_weekend = False
-discount = 0.2 if is_member and not is_weekend else 0.1 if is_member else 0
-print(f"Discount: {discount * 100}%")
 
-# Practical ternary example
+if is_member and not is_weekend:
+    discount = 0.20
+elif is_member:
+    discount = 0.10
+else:
+    discount = 0
+
+print(f"Discount: {discount * 100:.0f}%")
+
+
 def get_user_status(age, is_active):
-    return "Active Adult" if age >= 18 and is_active else "Inactive or Minor"
+    """Return a status based on age and account activity."""
 
-print(get_user_status(25, True))  # Output: Active Adult
+    if isinstance(age, bool) or not isinstance(age, int):
+        raise TypeError("Age must be an integer.")
+
+    if age < 0:
+        raise ValueError("Age cannot be negative.")
+
+    if not isinstance(is_active, bool):
+        raise TypeError("is_active must be Boolean.")
+
+    if age >= 18 and is_active:
+        return "Active Adult"
+
+    return "Inactive or Minor"
 
 
-#  Chained Comparisons: -> Multiple comparisons in a single statement.
+print(get_user_status(25, True))
 
-# Chained comparisons - more Pythonic
+
+# ------------Chained comparisons------------------
+
 value = 50
 
-# Traditional approach
+# Traditional comparison.
 if value >= 0 and value <= 100:
-    print("Value is between 0 and 100 (traditional)")
+    print("Value is between 0 and 100.")
 
-# Chained comparison (cleaner)
+# Python's chained comparison.
 if 0 <= value <= 100:
-    print("Value is between 0 and 100 (chained)")
+    print("Value is between 0 and 100.")
 
-# More examples
+
 age = 25
+
 if 18 <= age < 65:
-    print("Working age adult")
+    print("Working-age adult.")
+
 
 score = 85
+
 if 70 <= score < 90:
-    print("B grade")
-
-# With strings
-letter = 'm'
-if 'a' <= letter <= 'z':
-    print(f"{letter} is a lowercase letter")
+    print("B-grade range.")
 
 
+letter = "m"
 
-# Practical Real-World Examples: -> User Authentication System
+if "a" <= letter <= "z":
+    print(f"{letter} is a lowercase letter.")
+
+
+# ------------Authentication system------------------
+
 def authenticate_user(username, password, user_database):
-    """
-    Complete authentication system with multiple conditions
-    """
-    # Check if username exists
+    """Authenticate a user using multiple independent checks."""
+
+    if not isinstance(username, str):
+        raise TypeError("Username must be a string.")
+
+    if not isinstance(password, str):
+        raise TypeError("Password must be a string.")
+
+    if not isinstance(user_database, dict):
+        raise TypeError("User database must be a dictionary.")
+
+    # Check whether the username exists.
     if username not in user_database:
-        print("❌ Username not found!")
+        print("Username not found.")
         return False
-    
+
     user_data = user_database[username]
-    
-    # Check password
-    if user_data["password"] != password:
-        print("❌ Incorrect password!")
+
+    # Check that the stored record is a dictionary.
+    if not isinstance(user_data, dict):
+        print("Invalid user record.")
         return False
-    
-    # Check account status
-    if user_data["status"] == "banned":
-        print("❌ Account is banned!")
+
+    # Check the password.
+    if user_data.get("password") != password:
+        print("Incorrect password.")
         return False
-    elif user_data["status"] == "suspended":
-        print("⚠️ Account is suspended. Contact support.")
+
+    status = user_data.get("status")
+
+    # Account status conditions are mutually exclusive.
+    if status == "banned":
+        print("Account is banned.")
         return False
-    
-    # Check if email is verified
+    elif status == "suspended":
+        print("Account is suspended. Contact support.")
+        return False
+    elif status != "active":
+        print("Unknown account status.")
+        return False
+
+    # The default value is False if verified is missing.
     if not user_data.get("verified", False):
-        print("⚠️ Email not verified. Check your inbox.")
+        print("Email not verified.")
         return False
-    
-    # If all checks pass
-    print(f"✅ Welcome back, {username}!")
+
+    print(f"Welcome back, {username}!")
     return True
 
-# User database
+
 users = {
     "alice": {
         "password": "secret123",
         "status": "active",
-        "verified": True
+        "verified": True,
     },
     "bob": {
         "password": "password456",
         "status": "suspended",
-        "verified": True
+        "verified": True,
     },
     "charlie": {
         "password": "pass789",
         "status": "active",
-        "verified": False
-    }
+        "verified": False,
+    },
 }
 
-# Test authentication
-authenticate_user("alice", "secret123", users)  # Success
-authenticate_user("bob", "password456", users)  # Suspended
-authenticate_user("charlie", "pass789", users)  # Not verified
+authenticate_user("alice", "secret123", users)
+authenticate_user("bob", "password456", users)
+authenticate_user("charlie", "pass789", users)
+authenticate_user("unknown", "test", users)
 
 
-# E-commerce Discount Calculator
+# ------------Discount calculator-----------------
 
-def calculate_discount(order_amount, customer_tier, coupon_code, holiday_season):
-    """
-    Complex discount calculation with multiple conditions
-    """
-    base_discount = 0
-    
-    # Tier-based discount
+def calculate_discount(
+    order_amount,
+    customer_tier,
+    coupon_code=None,
+    holiday_season=False,
+):
+    """Calculate a discount with validation and conditional rules."""
+
+    if isinstance(order_amount, bool) or not isinstance(
+        order_amount, (int, float)
+    ):
+        raise TypeError("Order amount must be numeric.")
+
+    if order_amount < 0:
+        raise ValueError("Order amount cannot be negative.")
+
+    valid_tiers = {"standard", "silver", "gold", "premium"}
+
+    if customer_tier not in valid_tiers:
+        raise ValueError("Invalid customer tier.")
+
+    if coupon_code is not None and not isinstance(coupon_code, str):
+        raise TypeError("Coupon code must be a string or None.")
+
+    if not isinstance(holiday_season, bool):
+        raise TypeError("holiday_season must be Boolean.")
+
+    # Tier-based discount.
     if customer_tier == "premium":
-        base_discount = 0.20  # 20% off
+        base_discount = 0.20
     elif customer_tier == "gold":
-        base_discount = 0.15  # 15% off
+        base_discount = 0.15
     elif customer_tier == "silver":
-        base_discount = 0.10  # 10% off
-    else:  # standard
-        base_discount = 0.05  # 5% off
-    
-    # Additional discounts for large orders
+        base_discount = 0.10
+    else:
+        base_discount = 0.05
+
+    # Order-size discount.
     if order_amount > 1000:
-        base_discount += 0.05  # Extra 5% for large orders
+        base_discount += 0.05
     elif order_amount > 500:
-        base_discount += 0.03  # Extra 3% for medium orders
-    
-    # Coupon codes
+        base_discount += 0.03
+
+    # Coupon discount.
     if coupon_code == "SAVE20":
         base_discount += 0.20
     elif coupon_code == "SAVE10":
         base_discount += 0.10
     elif coupon_code == "FLASH15":
         base_discount += 0.15
-    
-    # Holiday season bonus
+    elif coupon_code is not None:
+        print("Coupon code is not recognized.")
+
+    # Holiday discount.
     if holiday_season:
-        base_discount += 0.05  # Extra 5% during holidays
-    
-    # Cap maximum discount at 50%
+        base_discount += 0.05
+
+    # Limit the discount to 50 percent.
     if base_discount > 0.50:
         base_discount = 0.50
-        print("⚠️ Maximum 50% discount applied")
-    
-    # Calculate final price
+        print("Maximum 50% discount applied.")
+
     discount_amount = order_amount * base_discount
     final_price = order_amount - discount_amount
-    
-    # Print summary
-    print(f"Order Amount: ${order_amount:.2f}")
-    print(f"Discount Rate: {base_discount * 100:.1f}%")
-    print(f"Discount Amount: ${discount_amount:.2f}")
-    print(f"Final Price: ${final_price:.2f}")
-    
+
+    print(f"Order amount: ${order_amount:.2f}")
+    print(f"Discount rate: {base_discount * 100:.1f}%")
+    print(f"Discount amount: ${discount_amount:.2f}")
+    print(f"Final price: ${final_price:.2f}")
+
     return final_price
 
-# Test the function
+
 calculate_discount(750, "gold", "SAVE20", True)
 
-# Grade Management System
+
+# ---------Grade management system------------------
 
 def calculate_grade(assignments, midterm, final, participation):
-    """
-    Calculate final grade with multiple conditionals
-    """
-    # Calculate weighted average
-    assignment_avg = sum(assignments) / len(assignments) if assignments else 0
+    """Calculate a weighted grade with validation."""
+
+    if not isinstance(assignments, (list, tuple)):
+        raise TypeError("Assignments must be a list or tuple.")
+
+    if not assignments:
+        raise ValueError("At least one assignment score is required.")
+
+    all_scores = list(assignments) + [midterm, final, participation]
+
+    for current_score in all_scores:
+        if isinstance(current_score, bool) or not isinstance(
+            current_score, (int, float)
+        ):
+            raise TypeError("All scores must be numeric.")
+
+        if not 0 <= current_score <= 100:
+            raise ValueError("Every score must be between 0 and 100.")
+
+    assignment_avg = sum(assignments) / len(assignments)
+
     weighted_score = (
-        assignment_avg * 0.3 +  # 30% assignments
-        midterm * 0.3 +         # 30% midterm
-        final * 0.3 +           # 30% final
-        participation * 0.1     # 10% participation
+        assignment_avg * 0.30
+        + midterm * 0.30
+        + final * 0.30
+        + participation * 0.10
     )
-    
-    print(f"Final Score: {weighted_score:.1f}%")
-    
-    # Determine letter grade with nested conditions
+
+    print(f"Final score: {weighted_score:.1f}%")
+
+    # Outer if selects the letter grade.
     if weighted_score >= 90:
         letter_grade = "A"
+
+        # Nested conditions provide a more detailed remark.
         if weighted_score >= 97:
             remark = "Excellent! Outstanding performance!"
         elif weighted_score >= 93:
             remark = "Very good! Keep it up!"
         else:
             remark = "Good work!"
-            
+
     elif weighted_score >= 80:
         letter_grade = "B"
+
         if weighted_score >= 87:
-            remark = "Above average performance"
+            remark = "Above-average performance."
         else:
-            remark = "Good but can improve"
-            
+            remark = "Good, but there is room for improvement."
+
     elif weighted_score >= 70:
         letter_grade = "C"
+
         if weighted_score >= 77:
-            remark = "Satisfactory performance"
+            remark = "Satisfactory performance."
         else:
-            remark = "Needs improvement in some areas"
-            
+            remark = "Needs improvement in some areas."
+
     elif weighted_score >= 60:
         letter_grade = "D"
-        remark = "Below average. Need significant improvement"
-        
+        remark = "Below average; significant improvement is needed."
+
     else:
         letter_grade = "F"
-        remark = "Failing. Must retake the course"
-        
-        # Special check for failing students
+        remark = "Failing; the course must be retaken."
+
+        # Independent checks can add more details.
         if midterm < 50 or final < 50:
-            remark += " (Poor exam performance)"
+            remark += " Poor exam performance."
         elif assignment_avg < 50:
-            remark += " (Poor assignment performance)"
-    
-    print(f"Letter Grade: {letter_grade}")
+            remark += " Poor assignment performance."
+
+    print(f"Letter grade: {letter_grade}")
     print(f"Remark: {remark}")
-    
+
     return letter_grade
 
-# Test with different scenarios
+
 calculate_grade([85, 90, 88], 82, 91, 80)
 
 
-# Basic isinstance() Usage
+# -------------isinstance() examples-----------------
 
-# Basic isinstance() - checks if object is instance of a class
 number = 10
 text = "Hello"
 boolean = True
 decimal = 3.14
 
-# Check type of variables
-print(f"Is 10 an int? {isinstance(number, int)}")        # True
-print(f"Is 'Hello' a str? {isinstance(text, str)}")      # True
-print(f"Is True a bool? {isinstance(boolean, bool)}")    # True
-print(f"Is 3.14 a float? {isinstance(decimal, float)}")  # True
+print(isinstance(number, int))
+print(isinstance(text, str))
+print(isinstance(boolean, bool))
+print(isinstance(decimal, float))
 
-# Check against multiple types
-print(f"Is 10 int or float? {isinstance(number, (int, float))}")  # True
-print(f"Is True int or bool? {isinstance(boolean, (int, bool))}") # True
-print(f"Is 'Hello' int or str? {isinstance(text, (int, str))}")   # True
+# A tuple allows checking more than one type.
+print(isinstance(number, (int, float)))
+print(isinstance(text, (int, str)))
+
+# Important: bool is a subclass of int.
+print(isinstance(True, int))  # True.
+print(isinstance(True, bool))  # True.
 
 
+# -----------------------------
+# 17. isinstance() with classes
+# -----------------------------
 
-# isinstance() with Custom Classes
-
-# Define custom classes
 class Animal:
+    """Base class for animals."""
+
     def __init__(self, name):
         self.name = name
-    
+
     def speak(self):
         return "Some sound"
 
+
 class Dog(Animal):
+    """Dog inherits from Animal."""
+
     def speak(self):
         return "Woof!"
 
+
 class Cat(Animal):
+    """Cat inherits from Animal."""
+
     def speak(self):
         return "Meow!"
 
+
 class Car:
+    """A class unrelated to Animal."""
+
     def __init__(self, brand):
         self.brand = brand
 
-# Create instances
+
 dog = Dog("Buddy")
 cat = Cat("Whiskers")
 car = Car("Toyota")
 animal = Animal("Generic")
 
-# isinstance with inheritance
-print(f"Is dog a Dog? {isinstance(dog, Dog)}")          # True
-print(f"Is dog an Animal? {isinstance(dog, Animal)}")   # True (inheritance)
-print(f"Is dog a Car? {isinstance(dog, Car)}")          # False
-print(f"Is animal an Animal? {isinstance(animal, Animal)}")  # True
-print(f"Is animal a Dog? {isinstance(animal, Dog)}")    # False
-
-# Multiple types including parent classes
-print(f"Is dog Dog or Cat? {isinstance(dog, (Dog, Cat))}")    # True
-print(f"Is dog Animal or Car? {isinstance(dog, (Animal, Car))}")  # True
-print(f"Is car Animal or Car? {isinstance(car, (Animal, Car))}")  # True
+print(isinstance(dog, Dog))
+print(isinstance(dog, Animal))  # True because Dog inherits Animal.
+print(isinstance(dog, Car))
+print(isinstance(animal, Animal))
+print(isinstance(animal, Dog))
+print(isinstance(dog, (Dog, Cat)))
+print(isinstance(dog, (Animal, Car)))
+print(isinstance(car, (Animal, Car)))
 
 
-# isinstance() with Built-in Types
+# -----------------------------
+# 18. Processing different types
+# -----------------------------
 
-# Comprehensive type checking
-data = [1, 2, 3]
-numbers = (4, 5, 6)
-info = {"name": "John", "age": 30}
-unique = {1, 2, 3}
-empty = None
-
-print("=== Built-in Type Checking ===")
-print(f"Is list a list? {isinstance(data, list)}")          # True
-print(f"Is tuple a tuple? {isinstance(numbers, tuple)}")    # True
-print(f"Is dict a dict? {isinstance(info, dict)}")          # True
-print(f"Is set a set? {isinstance(unique, set)}")           # True
-print(f"Is None NoneType? {isinstance(empty, type(None))}") # True
-
-# Checking against base types
-print(f"Is list an iterable? {isinstance(data, (list, tuple, set))}")  # True
-print(f"Is tuple an iterable? {isinstance(numbers, (list, tuple, set))}")  # True
-
-# Checking numeric types
-values = [1, 3.14, 2+3j, True, "not a number"]
-for value in values:
-    print(f"{value} is number? {isinstance(value, (int, float, complex))}")
-
-
-#  Practical Examples with isinstance(): -> Function Parameter Validation\
 def process_data(data, operation):
-    """
-    Process different types of data with various operations
-    """
-    # Validate data type
-    if not isinstance(data, (list, tuple, dict, str)):
-        raise TypeError(f"Unsupported data type: {type(data)}")
-    
-    # Process based on type
+    """Process lists, tuples, dictionaries, and strings."""
+
+    supported_types = (list, tuple, dict, str)
+
+    if not isinstance(data, supported_types):
+        raise TypeError(
+            f"Unsupported data type: {type(data).__name__}"
+        )
+
+    if not isinstance(operation, str):
+        raise TypeError("Operation must be a string.")
+
     if isinstance(data, (list, tuple)):
         if operation == "sum":
-            # Only works if all elements are numbers
-            if all(isinstance(x, (int, float)) for x in data):
+            # all() ensures every item is numeric.
+            if all(
+                isinstance(item, (int, float))
+                and not isinstance(item, bool)
+                for item in data
+            ):
                 return sum(data)
-            else:
-                raise ValueError("All elements must be numbers for sum")
+
+            raise ValueError("All elements must be numbers for sum.")
+
         elif operation == "length":
             return len(data)
+
+        elif operation == "copy":
+            return list(data)
+
         else:
-            return list(data) if isinstance(data, tuple) else data
-    
+            raise ValueError("Unknown list or tuple operation.")
+
     elif isinstance(data, dict):
         if operation == "keys":
             return list(data.keys())
@@ -551,226 +697,235 @@ def process_data(data, operation):
         elif operation == "items":
             return list(data.items())
         else:
-            return data
-    
+            raise ValueError("Unknown dictionary operation.")
+
     elif isinstance(data, str):
         if operation == "uppercase":
             return data.upper()
+        elif operation == "lowercase":
+            return data.lower()
         elif operation == "length":
             return len(data)
         else:
-            return data
-
-# Test the function
-print("=== Processing Different Data Types ===")
-print(process_data([1, 2, 3, 4], "sum"))          # 10
-print(process_data((1, 2, 3), "length"))          # 3
-print(process_data({"a": 1, "b": 2}, "keys"))     # ['a', 'b']
-print(process_data("hello", "uppercase"))         # "HELLO"
-
-# Error cases
-try:
-    process_data(123, "sum")  # Invalid type
-except TypeError as e:
-    print(f"Error: {e}")
-
-try:
-    process_data([1, "2", 3], "sum")  # Mixed types
-except ValueError as e:
-    print(f"Error: {e}")
+            raise ValueError("Unknown string operation.")
 
 
+print(process_data([1, 2, 3, 4], "sum"))
+print(process_data((1, 2, 3), "length"))
+print(process_data({"a": 1, "b": 2}, "keys"))
+print(process_data("hello", "uppercase"))
 
-# Data Validation System
+
+# -----------------------------
+# 19. User validation classes
+# -----------------------------
 
 class User:
+    """Regular user."""
+
     def __init__(self, username, email, age):
         self.username = username
         self.email = email
         self.age = age
 
+
 class Admin(User):
+    """Admin is a specialized User."""
+
     def __init__(self, username, email, age, permissions):
         super().__init__(username, email, age)
         self.permissions = permissions
 
+
 class Guest:
+    """Guest user with a temporary session."""
+
     def __init__(self, session_id):
         self.session_id = session_id
 
+
 def validate_and_process_user(user_data):
-    """
-    Complex validation using isinstance()
-    """
-    # Type validation
+    """Validate and process User, Admin, or Guest objects."""
+
     if not isinstance(user_data, (User, Admin, Guest)):
-        raise TypeError(f"Expected User, Admin, or Guest, got {type(user_data)}")
-    
-    # Process based on type and conditions
+        raise TypeError("Expected User, Admin, or Guest.")
+
+    # Admin must be checked before User.
+    # Admin is also an instance of User because it inherits User.
     if isinstance(user_data, Admin):
+        if not isinstance(user_data.permissions, list):
+            raise ValueError("Permissions must be a list.")
+
+        if not all(
+            isinstance(permission, str)
+            for permission in user_data.permissions
+        ):
+            raise ValueError("Every permission must be a string.")
+
         print(f"Admin: {user_data.username}")
         print(f"Permissions: {user_data.permissions}")
-        
-        # Additional validation for admin
-        if not isinstance(user_data.permissions, list):
-            raise ValueError("Permissions must be a list")
-        
-        return f"Admin access granted to {user_data.username}"
-    
-    elif isinstance(user_data, User):
-        print(f"Regular User: {user_data.username}")
-        
-        # Validate user age
-        if not isinstance(user_data.age, int):
-            raise TypeError("Age must be an integer")
-        
-        if user_data.age < 18:
-            return f"User {user_data.username} is a minor (age {user_data.age})"
-        else:
-            return f"User {user_data.username} is an adult"
-    
-    elif isinstance(user_data, Guest):
-        print(f"Guest: Session {user_data.session_id}")
-        
-        # Guest validation
-        if not isinstance(user_data.session_id, str):
-            raise TypeError("Session ID must be string")
-        
-        return f"Guest access for session {user_data.session_id}"
-    
-    return "Unknown user type"
 
-# Test the validation system
-admin = Admin("alice_admin", "alice@company.com", 35, ["read", "write", "delete"])
+        return f"Admin access granted to {user_data.username}"
+
+    elif isinstance(user_data, User):
+        if not isinstance(user_data.username, str):
+            raise TypeError("Username must be a string.")
+
+        if not isinstance(user_data.age, int):
+            raise TypeError("Age must be an integer.")
+
+        if user_data.age < 0:
+            raise ValueError("Age cannot be negative.")
+
+        print(f"Regular user: {user_data.username}")
+
+        if user_data.age < 18:
+            return f"User is a minor: {user_data.age}"
+        else:
+            return f"User is an adult: {user_data.age}"
+
+    elif isinstance(user_data, Guest):
+        if not isinstance(user_data.session_id, str):
+            raise TypeError("Session ID must be a string.")
+
+        if not user_data.session_id:
+            raise ValueError("Session ID cannot be empty.")
+
+        print(f"Guest session: {user_data.session_id}")
+        return f"Guest access for {user_data.session_id}"
+
+
+admin = Admin(
+    "alice_admin",
+    "alice@company.com",
+    35,
+    ["read", "write", "delete"],
+)
+
 user = User("bob_user", "bob@example.com", 25)
 guest = Guest("session_12345")
-invalid = "not a user"
 
-print("=== User Processing Results ===")
 print(validate_and_process_user(admin))
-print("\n" + validate_and_process_user(user))
-print("\n" + validate_and_process_user(guest))
-
-try:
-    print(validate_and_process_user(invalid))
-except TypeError as e:
-    print(f"\nError: {e}")
+print(validate_and_process_user(user))
+print(validate_and_process_user(guest))
 
 
+# -----------------------------
+# 20. Iterable, sequence, mapping
+# -----------------------------
 
-# isinstance() with Generic Types and Type Hints
+from collections.abc import Iterable, Mapping, Sequence
 
-from typing import List, Dict, Union, Optional, Any
-from collections.abc import Iterable, Sequence, Mapping
 
-def process_collection(data: Any):
-    """
-    Process data with isinstance checking against abstract types
-    """
-    # Check if iterable
+def process_collection(data):
+    """Process common collection types."""
+
     if isinstance(data, Iterable):
-        print(f"{data} is iterable")
-        
-        # Check if sequence (list, tuple, str, bytes)
-        if isinstance(data, Sequence):
-            print(f"  It's also a sequence with length {len(data)}")
-        
-        # Check if mapping (dict)
-        if isinstance(data, Mapping):
-            print(f"  It's also a mapping with {len(data)} keys")
-    
-    # Type-specific processing
-    if isinstance(data, list):
-        print("  Processing as list")
-        return [str(x) for x in data]
-    
-    elif isinstance(data, tuple):
-        print("  Processing as tuple")
-        return tuple(str(x) for x in data)
-    
-    elif isinstance(data, dict):
-        print("  Processing as dict")
-        return {k: str(v) for k, v in data.items()}
-    
-    elif isinstance(data, str):
-        print("  Processing as string")
-        return data.upper()
-    
-    return "Unknown collection type"
+        print(f"{data!r} is iterable.")
 
-# Test with different collections
+        if isinstance(data, Sequence):
+            print(f"It is a sequence with length {len(data)}.")
+
+        if isinstance(data, Mapping):
+            print(f"It is a mapping with {len(data)} keys.")
+
+    if isinstance(data, list):
+        return [str(item) for item in data]
+
+    elif isinstance(data, tuple):
+        return tuple(str(item) for item in data)
+
+    elif isinstance(data, dict):
+        return {key: str(value) for key, value in data.items()}
+
+    elif isinstance(data, str):
+        return data.upper()
+
+    elif isinstance(data, set):
+        return {str(item) for item in data}
+
+    else:
+        return "Unknown collection type"
+
+
 collections = [
     [1, 2, 3],
     (4, 5, 6),
     {"a": 1, "b": 2},
     "hello",
-    {1, 2, 3},  # Set is iterable but not sequence or mapping
-    123,         # Not iterable
+    {1, 2, 3},
+    123,
 ]
 
-print("=== Generic Type Checking ===")
 for item in collections:
-    print(f"\nTesting: {item}")
-    result = process_collection(item)
-    print(f"Result: {result}")
+    print(f"Testing: {item!r}")
+    print(f"Result: {process_collection(item)}")
 
 
+# -----------------------------
+# 21. Safe division
+# -----------------------------
 
-# isinstance() with Exception Handling
+def is_real_number(value):
+    """Return True only for int or float, excluding bool."""
+
+    return isinstance(value, (int, float)) and not isinstance(
+        value, bool
+    )
+
+
 def safe_divide(a, b):
-    """
-    Safe division with comprehensive type checking
-    """
-    # Check if both are numbers
-    if not isinstance(a, (int, float)):
-        raise TypeError(f"First argument must be numeric, got {type(a)}")
-    
-    if not isinstance(b, (int, float)):
-        raise TypeError(f"Second argument must be numeric, got {type(b)}")
-    
-    # Check for division by zero
+    """Divide two real numbers safely."""
+
+    if not is_real_number(a):
+        raise TypeError("First argument must be numeric.")
+
+    if not is_real_number(b):
+        raise TypeError("Second argument must be numeric.")
+
     if b == 0:
-        raise ZeroDivisionError("Cannot divide by zero")
-    
+        raise ZeroDivisionError("Cannot divide by zero.")
+
     return a / b
 
+
 def process_user_input(user_input):
-    """
-    Process user input with isinstance validation
-    """
-    # Handle None
+    """Process None, strings, numbers, lists, tuples, and dictionaries."""
+
     if user_input is None:
-        return "No input provided"
-    
-    # Handle different types
+        return "No input provided."
+
     if isinstance(user_input, str):
-        # Try to convert to number if it looks like one
         if user_input.isdigit():
             return safe_divide(int(user_input), 2)
-        else:
-            return f"String: {user_input.upper()}"
-    
-    elif isinstance(user_input, (int, float)):
+
+        return f"String: {user_input.upper()}"
+
+    # Check bool before numeric values.
+    elif is_real_number(user_input):
         return safe_divide(user_input, 2)
-    
+
     elif isinstance(user_input, (list, tuple)):
-        # Process each element
         results = []
+
         for item in user_input:
             try:
                 results.append(process_user_input(item))
-            except Exception as e:
-                results.append(f"Error: {e}")
-        return results
-    
-    elif isinstance(user_input, dict):
-        # Process dictionary values
-        return {k: process_user_input(v) for k, v in user_input.items()}
-    
-    else:
-        return f"Unsupported type: {type(user_input)}"
+            except (TypeError, ValueError, ZeroDivisionError) as error:
+                results.append(f"Error: {error}")
 
-# Test the robust functions
+        return results
+
+    elif isinstance(user_input, dict):
+        return {
+            key: process_user_input(value)
+            for key, value in user_input.items()
+        }
+
+    else:
+        return f"Unsupported type: {type(user_input).__name__}"
+
+
 test_inputs = [
     10,
     3.14,
@@ -780,276 +935,307 @@ test_inputs = [
     {"a": 10, "b": "20", "c": [1, 2]},
     None,
     True,
-    (5, 6, 7)
+    (5, 6, 7),
 ]
 
-print("=== Robust Input Processing ===")
-for test in test_inputs:
-    print(f"\nInput: {test} (type: {type(test)})")
-    try:
-        result = process_user_input(test)
-        print(f"Result: {result}")
-    except Exception as e:
-        print(f"Error: {e}")
+for test_input in test_inputs:
+    print(f"Input: {test_input!r}")
+    print(f"Result: {process_user_input(test_input)}")
 
 
-# isinstance() with Dataclasses and Custom Types
-from dataclasses import dataclass
-from datetime import datetime, date
+# -----------------------------
+# 22. Dataclasses and Enum
+# -----------------------------
+
+from dataclasses import asdict, dataclass
+from datetime import date, datetime
 from enum import Enum
+
 
 @dataclass
 class Person:
-    """Person dataclass with type validation"""
+    """Person data with runtime validation."""
+
     name: str
     age: int
     birth_date: date
-    
+
     def __post_init__(self):
-        # Validate types on creation
         if not isinstance(self.name, str):
-            raise TypeError(f"Name must be string, got {type(self.name)}")
-        
-        if not isinstance(self.age, int):
-            raise TypeError(f"Age must be integer, got {type(self.age)}")
-        
+            raise TypeError("Name must be a string.")
+
+        if isinstance(self.age, bool) or not isinstance(self.age, int):
+            raise TypeError("Age must be an integer.")
+
+        if self.age < 0:
+            raise ValueError("Age cannot be negative.")
+
+        # datetime is a subclass of date, so reject it explicitly here.
         if not isinstance(self.birth_date, date):
-            raise TypeError(f"Birth date must be date, got {type(self.birth_date)}")
+            raise TypeError("Birth date must be a date.")
+
+        if isinstance(self.birth_date, datetime):
+            raise TypeError("Birth date must not be a datetime.")
+
 
 class UserStatus(Enum):
-    """Enum for user status"""
+    """Allowed account statuses."""
+
     ACTIVE = "active"
     INACTIVE = "inactive"
     BANNED = "banned"
     SUSPENDED = "suspended"
 
+
 @dataclass
 class UserAccount:
-    """User account with comprehensive type validation"""
+    """User account with field validation."""
+
     username: str
     email: str
     status: UserStatus
     person: Person
     created_at: datetime
-    
-    def __post_init__(self):
-        # Validate all fields
-        self._validate_type(self.username, str, "username")
-        self._validate_type(self.email, str, "email")
-        self._validate_type(self.status, UserStatus, "status")
-        self._validate_type(self.person, Person, "person")
-        self._validate_type(self.created_at, datetime, "created_at")
-        
-        # Additional validation
-        if not "@" in self.email:
-            raise ValueError("Invalid email format")
-    
-    def _validate_type(self, value, expected_type, field_name):
-        """Helper method for type validation"""
-        if not isinstance(value, expected_type):
-            raise TypeError(
-                f"Field '{field_name}' must be {expected_type.__name__}, "
-                f"got {type(value).__name__}"
-            )
 
-def validate_and_process_account(account: Any):
-    """
-    Process account with isinstance validation
-    """
-    # Check if it's a UserAccount
+    def __post_init__(self):
+        if not isinstance(self.username, str):
+            raise TypeError("Username must be a string.")
+
+        if not self.username.strip():
+            raise ValueError("Username cannot be empty.")
+
+        if not isinstance(self.email, str):
+            raise TypeError("Email must be a string.")
+
+        if "@" not in self.email:
+            raise ValueError("Email must contain '@'.")
+
+        if not isinstance(self.status, UserStatus):
+            raise TypeError("Status must be a UserStatus value.")
+
+        if not isinstance(self.person, Person):
+            raise TypeError("Person must be a Person object.")
+
+        if not isinstance(self.created_at, datetime):
+            raise TypeError("created_at must be a datetime.")
+
+
+def validate_and_process_account(account):
+    """Process an account according to its status."""
+
     if not isinstance(account, UserAccount):
-        raise TypeError(f"Expected UserAccount, got {type(account)}")
-    
-    # Check status with isinstance
-    if not isinstance(account.status, UserStatus):
-        raise TypeError(f"Invalid status type: {type(account.status)}")
-    
-    # Process based on status
+        raise TypeError("Expected a UserAccount object.")
+
     if account.status == UserStatus.ACTIVE:
         return f"Active user: {account.username}"
-    elif account.status == UserStatus.INACTIVE:
-        return f"Inactive user: {account.username} (needs activation)"
-    elif account.status == UserStatus.BANNED:
-        return f"BANNED user: {account.username} (access revoked)"
-    elif account.status == UserStatus.SUSPENDED:
-        return f"Suspended user: {account.username} (temporary block)"
-    else:
-        return f"Unknown status for {account.username}"
 
-# Create and test account
-person = Person("John Doe", 30, date(1993, 5, 15))
+    elif account.status == UserStatus.INACTIVE:
+        return f"Inactive user: {account.username}"
+
+    elif account.status == UserStatus.BANNED:
+        return f"Banned user: {account.username}"
+
+    elif account.status == UserStatus.SUSPENDED:
+        return f"Suspended user: {account.username}"
+
+    else:
+        return f"Unknown status: {account.username}"
+
+
+person = Person(
+    name="John Doe",
+    age=30,
+    birth_date=date(1993, 5, 15),
+)
+
 account = UserAccount(
     username="johndoe",
     email="john@example.com",
     status=UserStatus.ACTIVE,
     person=person,
-    created_at=datetime.now()
+    created_at=datetime.now(),
 )
 
-print("=== Dataclass Validation ===")
 print(validate_and_process_account(account))
 
-# Test invalid account
-try:
-    invalid_person = Person("Jane", "25", "1994-06-20")  # Invalid types
-except TypeError as e:
-    print(f"Validation error: {e}")
 
+# -----------------------------
+# 23. API response and parser
+# -----------------------------
 
-
-# Real-World Production Example
 import json
-from typing import Any, Dict, List, Optional, Union
-from dataclasses import dataclass, asdict
+from typing import Any, Optional
+
 
 @dataclass
 class APIResponse:
-    """API response with type validation"""
+    """Represent an API response."""
+
     status: str
-    data: Optional[Dict[str, Any]]
+    data: Optional[dict[str, Any]]
     message: str
     code: int
-    
+
     def __post_init__(self):
-        """Validate types after initialization"""
         if not isinstance(self.status, str):
-            raise TypeError(f"Status must be str, got {type(self.status)}")
-        
+            raise TypeError("Status must be a string.")
+
         if self.data is not None and not isinstance(self.data, dict):
-            raise TypeError(f"Data must be dict or None, got {type(self.data)}")
-        
+            raise TypeError("Data must be a dictionary or None.")
+
         if not isinstance(self.message, str):
-            raise TypeError(f"Message must be str, got {type(self.message)}")
-        
-        if not isinstance(self.code, int):
-            raise TypeError(f"Code must be int, got {type(self.code)}")
-    
-    def to_json(self) -> str:
-        """Convert to JSON with type safety"""
-        data_dict = asdict(self)
-        # Ensure nested types are serializable
-        self._ensure_serializable(data_dict)
-        return json.dumps(data_dict)
-    
-    def _ensure_serializable(self, data):
-        """Recursively ensure all data is JSON serializable"""
-        if isinstance(data, dict):
-            return {k: self._ensure_serializable(v) for k, v in data.items()}
-        elif isinstance(data, list):
-            return [self._ensure_serializable(item) for item in data]
-        elif data is None or isinstance(data, (str, int, float, bool)):
-            return data
-        else:
-            return str(data)  # Convert non-serializable to string
+            raise TypeError("Message must be a string.")
+
+        if isinstance(self.code, bool) or not isinstance(self.code, int):
+            raise TypeError("Code must be an integer.")
+
+        if not 100 <= self.code <= 599:
+            raise ValueError("Code must be an HTTP status code.")
+
+    def to_json(self):
+        """Convert the response into JSON text."""
+
+        return json.dumps(asdict(self), default=str)
+
 
 class DataParser:
-    """Production data parser with isinstance validation"""
-    
+    """Parse and validate several types of input."""
+
     @staticmethod
-    def parse_input(input_data: Any) -> Dict[str, Any]:
-        """
-        Parse various input types with comprehensive validation
-        """
-        # Check for None
+    def parse_input(input_data: Any) -> dict[str, Any]:
+        """Parse input according to its type."""
+
         if input_data is None:
             return {"error": "No input provided"}
-        
-        # Handle JSON string
+
         if isinstance(input_data, str):
             try:
                 parsed = json.loads(input_data)
-                return DataParser._process_parsed_data(parsed)
             except json.JSONDecodeError:
-                return {"error": "Invalid JSON format", "data": input_data}
-        
-        # Handle dictionary
+                return {
+                    "error": "Invalid JSON format",
+                    "data": input_data,
+                }
+
+            return DataParser._process_parsed_data(parsed)
+
         elif isinstance(input_data, dict):
             return DataParser._process_parsed_data(input_data)
-        
-        # Handle list
-        elif isinstance(input_data, list):
-            results = []
-            for item in input_data:
-                result = DataParser.parse_input(item)
-                results.append(result)
-            return {"results": results}
-        
-        # Handle other types
-        elif isinstance(input_data, (int, float, bool)):
-            return {"value": input_data, "type": type(input_data).__name__}
-        
-        else:
-            return {"error": f"Unsupported input type: {type(input_data).__name__}"}
-    
-    @staticmethod
-    def _process_parsed_data(data: Dict[str, Any]) -> Dict[str, Any]:
-        """Process parsed JSON data with validation"""
-        required_fields = ["id", "name", "value"]
-        processed = {"valid": True, "data": {}}
-        
-        # Validate required fields
-        missing_fields = [f for f in required_fields if f not in data]
-        if missing_fields:
-            processed["valid"] = False
-            processed["error"] = f"Missing fields: {missing_fields}"
-            return processed
-        
-        # Validate field types
-        id_value = data.get("id")
-        name_value = data.get("name")
-        value_value = data.get("value")
-        
-        if not isinstance(id_value, (int, str)):
-            processed["valid"] = False
-            processed["error"] = f"ID must be int or str, got {type(id_value).__name__}"
-            return processed
-        
-        if not isinstance(name_value, str):
-            processed["valid"] = False
-            processed["error"] = f"Name must be str, got {type(name_value).__name__}"
-            return processed
-        
-        if not isinstance(value_value, (int, float)):
-            processed["valid"] = False
-            processed["error"] = f"Value must be number, got {type(value_value).__name__}"
-            return processed
-        
-        # All validations passed
-        processed["data"] = {
-            "id": id_value,
-            "name": name_value,
-            "value": value_value,
-            "processed_at": datetime.now().isoformat()
-        }
-        
-        return processed
 
-# Production test
+        elif isinstance(input_data, list):
+            results = [
+                DataParser.parse_input(item)
+                for item in input_data
+            ]
+
+            return {"results": results}
+
+        # bool is checked before int because bool inherits from int.
+        elif isinstance(input_data, bool):
+            return {
+                "value": input_data,
+                "type": "bool",
+            }
+
+        elif isinstance(input_data, (int, float)):
+            return {
+                "value": input_data,
+                "type": type(input_data).__name__,
+            }
+
+        else:
+            return {
+                "error": (
+                    "Unsupported input type: "
+                    f"{type(input_data).__name__}"
+                )
+            }
+
+    @staticmethod
+    def _process_parsed_data(data: Any) -> dict[str, Any]:
+        """Validate a dictionary containing id, name, and value."""
+
+        if not isinstance(data, dict):
+            return {
+                "valid": False,
+                "error": "JSON value must be an object.",
+            }
+
+        required_fields = {"id", "name", "value"}
+        missing_fields = required_fields - data.keys()
+
+        if missing_fields:
+            return {
+                "valid": False,
+                "error": (
+                    "Missing fields: "
+                    f"{sorted(missing_fields)}"
+                ),
+            }
+
+        id_value = data["id"]
+        name_value = data["name"]
+        value_value = data["value"]
+
+        if isinstance(id_value, bool) or not isinstance(
+            id_value, (int, str)
+        ):
+            return {
+                "valid": False,
+                "error": "ID must be an integer or string.",
+            }
+
+        if not isinstance(name_value, str):
+            return {
+                "valid": False,
+                "error": "Name must be a string.",
+            }
+
+        if isinstance(value_value, bool) or not isinstance(
+            value_value, (int, float)
+        ):
+            return {
+                "valid": False,
+                "error": "Value must be a number.",
+            }
+
+        return {
+            "valid": True,
+            "data": {
+                "id": id_value,
+                "name": name_value,
+                "value": value_value,
+                "processed_at": datetime.now().isoformat(),
+            },
+        }
+
+
+parser = DataParser()
+
 test_cases = [
     None,
     '{"id": 1, "name": "Test", "value": 42}',
-    '{"id": "abc", "name": "Invalid", "value": "not a number"}',
+    '{"id": "abc", "name": "Invalid", "value": "wrong"}',
     {"id": 2, "name": "Dict Test", "value": 99.9},
-    [{"id": 3, "name": "Item 1", "value": 10}, {"id": 4, "name": "Item 2", "value": 20}],
+    [
+        {"id": 3, "name": "Item 1", "value": 10},
+        {"id": 4, "name": "Item 2", "value": 20},
+    ],
     42,
-    "plain string"
+    True,
+    "plain string",
 ]
 
-print("=== Production Data Parser ===")
-parser = DataParser()
-for test in test_cases:
-    print(f"\nInput: {test}")
-    result = parser.parse_input(test)
-    print(f"Result: {json.dumps(result, indent=2)}")
+for test_case in test_cases:
+    print(f"Input: {test_case!r}")
+    print(f"Result: {parser.parse_input(test_case)}")
 
-# Create API response
+
 response = APIResponse(
     status="success",
     data={"id": 1, "name": "API Test", "value": 100},
     message="Data processed successfully",
-    code=200
+    code=200,
 )
 
-print(f"\nAPI Response: {response.to_json()}")
-
-
+print(response.to_json())
